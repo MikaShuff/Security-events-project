@@ -1,0 +1,128 @@
+<!-- פס סינון -->
+<section class="filters" dir="rtl">
+  <div class="row">
+    <div class="field">
+      <label>מתאריך</label>
+      <input type="date" [(ngModel)]="filters.fromDate" />
+    </div>
+
+    <div class="field">
+      <label>עד תאריך</label>
+      <input type="date" [(ngModel)]="filters.toDate" />
+    </div>
+
+    <div class="field">
+      <label>פורמט</label>
+      <select [(ngModel)]="filters.formatId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of formats" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>סניף</label>
+      <select [(ngModel)]="filters.branchId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of branches" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>אזור ביטחון</label>
+      <select [(ngModel)]="filters.zoneId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of zones" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>קב"ט</label>
+      <select [(ngModel)]="filters.officerId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of officers" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>סוג אירוע</label>
+      <select [(ngModel)]="filters.eventTypeId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of eventTypes" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>תת סוג אירוע</label>
+      <select [(ngModel)]="filters.subEventTypeId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of subEventTypes" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>אופן טיפול</label>
+      <select [(ngModel)]="filters.handlingId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of handlings" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>סטטוס</label>
+      <select [(ngModel)]="filters.statusId">
+        <option [ngValue]="null">הכל</option>
+        <option *ngFor="let x of statuses" [ngValue]="x.id">{{ x.name }}</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button (click)="reload()">הצג</button>
+      <button (click)="clearFilters()">ניקוי</button>
+    </div>
+  </div>
+</section>
+
+<!-- מצב טעינה/שגיאה -->
+<div *ngIf="loading">טוען נתונים...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<!-- טבלת תוצאות -->
+
+<!-- טבלת תוצאות -->
+<table class="table" *ngIf="!loading && !error" dir="rtl">
+  <thead>
+    <tr>
+      <th>תאריך אירוע</th>
+      <th>סניף</th>
+      <th>סוג אירוע</th>
+      <th>תיאור אירוע</th>
+      <th>סכום</th>
+      <th>סטטוס</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let e of events">
+      <td>{{ e.eventDate | date:'dd/MM/yyyy' }}</td>
+
+      <!-- סניף: באירוע זה branchNum -->
+      <td>{{ nameFrom(branchMap, e.branchNum) }}</td>
+
+      <!-- סוג אירוע: באירוע זה eventType -->
+      <td>{{ nameFrom(eventTypeMap, e.eventType) }}</td>
+
+      <!-- תיאור: באירוע זה eventDesc -->
+      <td>{{ e.eventDesc }}</td>
+
+      <!-- סכום: באירוע זה eventSum -->
+      <td>{{ e.eventSum | number:'1.0-0' }}</td>
+
+      <!-- סטטוס: באירוע זה statusId -->
+      <td>{{ nameFrom(statusMap, e.statusId) }}</td>
+
+    </tr>
+
+  </tbody>
+</table>
+

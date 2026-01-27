@@ -1,0 +1,14 @@
+
+.btn-primary {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+  .btn-primary:hover {
+    background: #1d4ed8;
+  }

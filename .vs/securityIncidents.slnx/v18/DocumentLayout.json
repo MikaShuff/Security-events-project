@@ -1,0 +1,164 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\home\\home.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\home\\home.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\home\\home.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\home\\home.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\header\\header.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\header\\header.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\header\\header.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\header\\header.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\app.routes.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\app.routes.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|c:\\users\\mikah\\desktop\\fullstack projects\\angular\\securityincidents\\securityincidents.client\\src\\app\\home\\home.component.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{9F78B316-B918-1526-987C-4DBE6F3000A7}|securityincidents.client\\securityincidents.client.esproj|solutionrelative:securityincidents.client\\src\\app\\home\\home.component.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "home.component.ts",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\home\\home.component.ts",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\home\\home.component.ts",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\home\\home.component.ts",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\home\\home.component.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-01-13T06:40:05.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "home.component.html",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\home\\home.component.html",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\home\\home.component.html",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\home\\home.component.html",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\home\\home.component.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-01-13T08:32:11.04Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "open-ticket.component.html",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.html",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.html",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.html",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.html",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-01-12T08:25:23.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "open-ticket.component.ts",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.ts",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.ts",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.ts",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\tickets\\open-ticket\\open-ticket.component.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-01-12T08:51:40.178Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "header.component.html",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\header\\header.component.html",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\header\\header.component.html",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\header\\header.component.html",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\header\\header.component.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-01-13T08:39:48.379Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "header.component.ts",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\header\\header.component.ts",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\header\\header.component.ts",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\header\\header.component.ts",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\header\\header.component.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-01-13T08:36:52.812Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "home.component.css",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\home\\home.component.css",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\home\\home.component.css",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\home\\home.component.css",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\home\\home.component.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-01-13T08:32:36.274Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "app.routes.ts",
+              "DocumentMoniker": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\app.routes.ts",
+              "RelativeDocumentMoniker": "securityincidents.client\\src\\app\\app.routes.ts",
+              "ToolTip": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityincidents.client\\src\\app\\app.routes.ts",
+              "RelativeToolTip": "securityincidents.client\\src\\app\\app.routes.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-01-12T08:32:14.395Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

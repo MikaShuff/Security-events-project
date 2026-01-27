@@ -1,0 +1,43 @@
+<!-- open-ticket.component.html -->
+<div class="container" style="max-width: 640px; margin: 24px auto; padding: 12px;">
+
+  <h2>פתיחת קריאה</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="field">
+      <label>נושא</label>
+      <input type="text" formControlName="subject" />
+      <small *ngIf="form.controls.subject.invalid && form.controls.subject.touched">
+        נושא נדרש (לפחות 3 תווים).
+      </small>
+    </div>
+
+    <div class="field" style="margin-top:12px;">
+      <label>תיאור</label>
+      <textarea rows="5" formControlName="description"></textarea>
+      <small *ngIf="form.controls.description.invalid && form.controls.description.touched">
+        תיאור נדרש (לפחות 10 תווים).
+      </small>
+    </div>
+
+    <div class="field" style="margin-top:12px;">
+      <label>עדיפות</label>
+      <select formControlName="priority">
+        <option value="Low">נמוכה</option>
+        <option value="Medium">בינונית</option>
+        <option value="High">גבוהה</option>
+      </select>
+    </div>
+
+    <div style="display:flex; gap:8px; align-items:center; margin-top:16px;">
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'שולח...' : 'פתח קריאה' }}
+      </button>
+    </div> 
+
+  </form>
+
+  <p *ngIf="serverMessage" style="margin-top:12px;">
+    {{ serverMessage }}
+  </p>
+</div>
