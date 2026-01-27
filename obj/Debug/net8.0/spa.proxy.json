@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:60217",
 "RedirectUrl": "",
 "LaunchCommand": "npm start",
-"WorkingDirectory": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityIncidents.Server\\..\\securityincidents.client",
+"WorkingDirectory": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityEvents\\securityEvents.Server\\..\\securityincidents.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

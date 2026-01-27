@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityIncidents.Server\\securityIncidents.Server.csproj": {}
+    "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityEvents\\securityEvents.Server\\securityIncidents.Server.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityIncidents.Server\\securityIncidents.Server.csproj": {
+    "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityEvents\\securityEvents.Server\\securityIncidents.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityIncidents.Server\\securityIncidents.Server.csproj",
+        "projectUniqueName": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityEvents\\securityEvents.Server\\securityIncidents.Server.csproj",
         "projectName": "securityIncidents.Server",
-        "projectPath": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityIncidents.Server\\securityIncidents.Server.csproj",
+        "projectPath": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityEvents\\securityEvents.Server\\securityIncidents.Server.csproj",
         "packagesPath": "C:\\Users\\mikah\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityIncidents\\securityIncidents.Server\\obj\\",
+        "outputPath": "C:\\Users\\mikah\\Desktop\\Fullstack Projects\\Angular\\securityEvents\\securityEvents.Server\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

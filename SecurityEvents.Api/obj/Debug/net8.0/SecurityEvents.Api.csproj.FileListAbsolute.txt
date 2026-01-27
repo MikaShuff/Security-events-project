@@ -144,3 +144,4 @@ C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.pdb
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.genruntimeconfig.cache
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\ref\SecurityEvents.Api.dll
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.sourcelink.json
