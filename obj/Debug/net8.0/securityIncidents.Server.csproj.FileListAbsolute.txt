@@ -36,3 +36,16 @@ C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityIncidents\securityInci
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityIncidents\securityIncidents.Server\obj\Debug\net8.0\securityIncidents.Server.pdb
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityIncidents\securityIncidents.Server\obj\Debug\net8.0\securityIncidents.Server.genruntimeconfig.cache
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityIncidents\securityIncidents.Server\obj\Debug\net8.0\ref\securityIncidents.Server.dll
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.csproj.AssemblyReference.cache
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\spa.proxy.json
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.AssemblyInfoInputs.cache
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.AssemblyInfo.cs
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.csproj.CoreCompileInputs.cache
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.sourcelink.json
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.dll
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\refint\securityIncidents.Server.dll
+C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\obj\Debug\net8.0\securityIncidents.Server.pdb

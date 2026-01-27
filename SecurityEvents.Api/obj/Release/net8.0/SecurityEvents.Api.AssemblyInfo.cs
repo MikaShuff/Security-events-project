@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SecurityEvents.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+35e1af2e78d14d7b273f60fd41a21d1f6b156f4d")]
 [assembly: System.Reflection.AssemblyProductAttribute("SecurityEvents.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SecurityEvents.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
