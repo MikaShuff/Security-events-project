@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
 using SecurityEvents.Api.Models;
+using SecurityEvents.Api.Dtos;
 
 namespace SecurityEvents.Api.Controllers;
 
@@ -82,5 +83,44 @@ public class EventsController(AppDbContext db) : ControllerBase
         return Ok(item);
     }
 
-    // בהמשך ניתן להוסיף POST/PUT/DELETE לעדכון ויצירת אירועים
+    
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] EventUpdateDto dto)
+    {
+        var entity = await db.Events.FindAsync(id);
+        if (entity == null)
+            return NotFound();
+
+        
+        if (dto.EventDesc != null) entity.EventDesc = dto.EventDesc;
+        if (dto.EventType.HasValue) entity.EventType = dto.EventType.Value;
+        if (dto.SubEventId.HasValue) entity.SubEventId = dto.SubEventId.Value;
+        if (dto.BranchNum.HasValue) entity.BranchNum = dto.BranchNum.Value;
+        if (dto.EventSum.HasValue) entity.EventSum = dto.EventSum.Value;
+        if (dto.HandleType.HasValue) entity.HandleType = dto.HandleType.Value;
+        if (dto.HandleDesc != null) entity.HandleDesc = dto.HandleDesc;
+        if (dto.OfficerId.HasValue) entity.OfficerId = dto.OfficerId.Value;
+        if (dto.Remark != null) entity.Remark = dto.Remark;
+        if (dto.StatusId.HasValue) entity.StatusId = dto.StatusId.Value;
+        if (dto.CeoRemark != null) entity.CeoRemark = dto.CeoRemark;
+        if (dto.CustomerTz != null) entity.CustomerTz = dto.CustomerTz;
+
+        entity.DateModified = DateTime.Now;
+
+        await db.SaveChangesAsync();
+        return Ok(entity);
+    }
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var entity = await db.Events.FindAsync(id);
+        if (entity == null)
+            return NotFound();
+
+        db.Events.Remove(entity);
+        await db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
 }

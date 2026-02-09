@@ -31,4 +31,34 @@ public class SubEventTypesController(AppDbContext db) : ControllerBase
 
         return Ok(data);
     }
+    [HttpPut("{eventType:int}/{subEventId:int}")]
+    public async Task<IActionResult> Update(int eventType, int subEventId, [FromBody] SubEventTypeUpdateDto dto)
+    {
+        var entity = await db.SubEventsTypes
+            .FirstOrDefaultAsync(x => x.EventType == eventType && x.SubEventId == subEventId);
+
+        if (entity == null)
+            return NotFound();
+
+        if (dto.SubEventName != null)
+            entity.SubEventName = dto.SubEventName;
+
+        await db.SaveChangesAsync();
+        return Ok(entity);
+    }
+    [HttpDelete("{eventType:int}/{subEventId:int}")]
+    public async Task<IActionResult> Delete(int eventType, int subEventId)
+    {
+        var entity = await db.SubEventsTypes
+            .FirstOrDefaultAsync(x => x.EventType == eventType && x.SubEventId == subEventId);
+
+        if (entity == null)
+            return NotFound();
+
+        db.SubEventsTypes.Remove(entity);
+        await db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
 }

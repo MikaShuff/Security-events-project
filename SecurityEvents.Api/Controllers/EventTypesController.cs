@@ -26,4 +26,30 @@ public class EventTypesController(AppDbContext db) : ControllerBase
 
         return Ok(data);
     }
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] EventTypeUpdateDto dto)
+    {
+        var entity = await db.EventsTypes.FindAsync(id);
+        if (entity == null)
+            return NotFound();
+
+       
+        if (dto.EventName != null)
+            entity.EventName = dto.EventName;
+
+        await db.SaveChangesAsync();
+        return Ok(entity);
+    }
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var entity = await db.EventsTypes.FindAsync(id);
+        if (entity == null)
+            return NotFound();
+
+        db.EventsTypes.Remove(entity);
+        await db.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

@@ -25,4 +25,33 @@ public class OfficersController(AppDbContext db) : ControllerBase
 
         return Ok(data);
     }
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] OfficerUpdateDto dto)
+    {
+        var officer = await db.Officers.FindAsync(id);
+        if (officer == null)
+            return NotFound();
+
+        
+        if (dto.OfficerName != null)
+            officer.OfficerName = dto.OfficerName;
+
+        if (dto.ZoneId.HasValue)
+            officer.ZoneId = dto.ZoneId.Value;
+
+        await db.SaveChangesAsync();
+        return Ok(officer);
+    }
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var entity = await db.Officers.FindAsync(id);
+        if (entity == null)
+            return NotFound();
+
+        db.Officers.Remove(entity);
+        await db.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
