@@ -1,0 +1,30 @@
+<!-- system-tables.component.html -->
+<section class="system-tables">
+  <h1>טבלאות מערכת</h1>
+
+  <div *ngIf="loading">טוען…</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading && !error && tables?.length" class="table">
+    <thead>
+      <tr>
+        <th>שם טבלה</th>
+        <th>תיאור</th>
+        <th>שורות</th>
+        <th>עודכן</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of tables">
+        <td>{{ t.name }}</td>
+        <td>{{ t.description }}</td>
+        <td>{{ t.rows | number }}</td>
+        <td>{{ t.updatedAt | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !error && !tables?.length">
+    לא נמצאו טבלאות.
+  </div>
+</section>

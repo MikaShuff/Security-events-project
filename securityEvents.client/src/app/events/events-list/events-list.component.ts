@@ -23,6 +23,12 @@ export class EventsListComponent implements OnInit {
   loading = false;
   error?: string;
 
+  // עימוד
+  currentPage = 1;
+  pageSize = 20;
+  totalCount = 0;
+  totalPages = 0;
+
   // סינון (קשור ל-ngModel בטופס)
   filters: {
     fromDate?: string;
@@ -120,10 +126,9 @@ export class EventsListComponent implements OnInit {
       eventTypeId: f.eventTypeId ?? undefined,
       subEventTypeId: f.subEventTypeId ?? undefined,
       handlingId: f.handlingId ?? undefined,
-      statusId: f.statusId ?? undefined
-
-      // בהמשך אפשר להוסיף עימוד/מיון
-      // page: 1, pageSize: 50, sort: 'eventDate_desc'
+      statusId: f.statusId ?? undefined,
+      page: this.currentPage,
+      pageSize: this.pageSize
     };
   }
 
@@ -134,8 +139,11 @@ export class EventsListComponent implements OnInit {
     const query = this.buildQuery();
 
     this.eventsSrv.getAll(query).subscribe({
-      next: (data) => {
-        this.events = data;
+      next: (response) => {
+        this.events = response.data;
+        this.totalCount = response.totalCount;
+        this.totalPages = response.totalPages;
+        this.currentPage = response.page;
         this.loading = false;
       },
       error: (err) => {
@@ -157,7 +165,40 @@ export class EventsListComponent implements OnInit {
       handlingId: null,
       statusId: null
     };
+    this.currentPage = 1; // חזרה לעמוד הראשון
     this.reload();
+  }
+
+  // פונקציות ניווט עימוד
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.reload();
+  }
+
+  nextPage(): void {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  previousPage(): void {
+    this.goToPage(this.currentPage - 1);
+  }
+
+  // מערך עמודים להצגה (למשל: 1, 2, 3, ..., 10)
+  get pageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   // פונקציות עזר להצגת שם במקום מזהה

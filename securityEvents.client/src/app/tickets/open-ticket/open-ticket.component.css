@@ -1,3 +1,17 @@
+/* src/app/tickets/open-ticket/open-ticket.component.css */
+
+.container {
+  max-width: 640px;
+  margin: 24px auto;
+  padding: 12px;
+  font-family: inherit;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
 
 .btn-back, .btn-home {
   background: #f3f4f6;
@@ -5,25 +19,97 @@
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 12px;
 }
 
   .btn-back:hover, .btn-home:hover {
     background: #e5e7eb;
   }
 
+h2 {
+  margin: 0 0 16px 0;
+}
 
-.btn, .btn-secondary {
-  display: inline-block;
-  background: #f3f4f6;
-  color: #111827;
+.field {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+label {
+  font-weight: 600;
+}
+
+.req {
+  color: #d32f2f;
+}
+
+input, textarea, select {
   border: 1px solid #d1d5db;
-  text-decoration: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font: inherit;
+  background: #fff;
+}
+
+  input.invalid, textarea.invalid {
+    border-color: #ef4444;
+    background: #fff5f5;
+  }
+
+.error {
+  color: #b91c1c;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.btn-primary {
+  background: #0b5ea8;
+  color: #fff;
+  border: 1px solid #0b5ea8;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
 }
 
-  .btn:hover, .btn-secondary:hover {
+  .btn-primary:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+  }
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+  .btn-secondary:hover {
     background: #e5e7eb;
+  }
+
+.server-msg {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+  .server-msg.success {
+    background: #e6f4ea;
+    color: #1b5e20;
+    border: 1px solid #a5d6a7;
+  }
+
+  .server-msg.error {
+    background: #fdecea;
+    color: #b71c1c;
+    border: 1px solid #ef9a9a;
   }

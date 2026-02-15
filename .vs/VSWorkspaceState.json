@@ -1,15 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\securityEvents.client",
-    "\\securityEvents.client\\src",
-    "\\securityEvents.client\\src\\app",
-    "\\securityEvents.client\\src\\app\\events",
-    "\\securityEvents.client\\src\\app\\events\\events-list",
-    "\\securityEvents.Server",
-    "\\securityEvents.Server\\SecurityEvents.Api",
-    "\\securityEvents.Server\\SecurityEvents.Api\\Dtos",
-    "\\securityEvents.Server\\SecurityEvents.Api\\Models"
+    ""
   ],
   "PreviewInSolutionExplorer": false
 }

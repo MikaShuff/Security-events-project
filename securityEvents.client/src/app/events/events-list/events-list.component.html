@@ -86,7 +86,10 @@
 <div *ngIf="loading">טוען נתונים...</div>
 <div *ngIf="error" class="error">{{ error }}</div>
 
-<!-- טבלת תוצאות -->
+<!-- מידע על תוצאות -->
+<div *ngIf="!loading && !error && totalCount > 0" class="results-info" dir="rtl">
+  <p>נמצאו <strong>{{ totalCount }}</strong> תוצאות | מציג {{ events.length }} תוצאות בעמוד {{ currentPage }} מתוך {{ totalPages }}</p>
+</div>
 
 <!-- טבלת תוצאות -->
 <table class="table" *ngIf="!loading && !error" dir="rtl">
@@ -102,27 +105,31 @@
   </thead>
 
   <tbody>
-
     <tr *ngFor="let e of events">
       <td>{{ e.eventDate | date:'dd/MM/yyyy' }}</td>
-
-      <!-- סניף: באירוע זה branchNum -->
       <td>{{ nameFrom(branchMap, e.branchNum) }}</td>
-
-      <!-- סוג אירוע: באירוע זה eventType -->
       <td>{{ nameFrom(eventTypeMap, e.eventType) }}</td>
-
-      <!-- תיאור: באירוע זה eventDesc -->
       <td>{{ e.eventDesc }}</td>
-
-      <!-- סכום: באירוע זה eventSum -->
-      <td>{{ e.eventSum | number:'1.0-0' }}</td>
-
-      <!-- סטטוס: באירוע זה statusId -->
+      <td>{{ e.eventSum | number:'1.0-0' }} ₪</td>
       <td>{{ nameFrom(statusMap, e.statusId) }}</td>
-
     </tr>
-
   </tbody>
 </table>
 
+<!-- הודעה אם אין תוצאות -->
+<div *ngIf="!loading && !error && events.length === 0" class="no-results" dir="rtl">
+  <p>לא נמצאו תוצאות</p>
+</div>
+
+<!-- עימוד -->
+<div *ngIf="!loading && !error && totalPages > 1" class="pagination" dir="rtl">
+  <button (click)="previousPage()" [disabled]="currentPage === 1">הקודם</button>
+
+  <button *ngFor="let page of pageNumbers"
+          (click)="goToPage(page)"
+          [class.active]="page === currentPage">
+    {{ page }}
+  </button>
+
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">הבא</button>
+</div>

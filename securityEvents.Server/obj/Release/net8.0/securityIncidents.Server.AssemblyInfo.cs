@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("securityIncidents.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a5b042ff2bbbdfca220ead76f6fdd86560801ae3")]
 [assembly: System.Reflection.AssemblyProductAttribute("securityIncidents.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("securityIncidents.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

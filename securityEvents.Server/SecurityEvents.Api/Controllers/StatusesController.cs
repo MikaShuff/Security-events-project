@@ -25,4 +25,16 @@ public class StatusesController(AppDbContext db) : ControllerBase
 
         return Ok(data);
     }
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var entity = await db.Statuses.FindAsync(id);
+        if (entity == null)
+            return NotFound();
+
+        db.Statuses.Remove(entity);
+        await db.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

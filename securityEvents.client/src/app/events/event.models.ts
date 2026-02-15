@@ -1,4 +1,3 @@
-
 // src/app/events/event.models.ts
 
 // אירוע מינימלי שנציג בטבלה ובסינון
@@ -33,10 +32,19 @@ export interface EventQuery {
   handlingId?: number;
   statusId?: number;
 
-  // אופציונלי: עימוד/מיון בהמשך
+  // עימוד/מיון
   page?: number;
   pageSize?: number;
   sort?: string; // למשל: 'eventDate_desc'
+}
+
+// תגובה עם עימוד
+export interface PagedResponse<T> {
+  data: T[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 // טיפוס בסיסי ללוקאפים

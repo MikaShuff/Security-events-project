@@ -1,43 +1,51 @@
-<!-- open-ticket.component.html -->
-<div class="container" style="max-width: 640px; margin: 24px auto; padding: 12px;">
+<!-- src/app/tickets/open-ticket/open-ticket.component.html -->
+<div class="container" dir="rtl">
+  <div class="header-actions">
+    <button type="button" class="btn-back" (click)="goBack()">חזרה</button>
+    <button type="button" class="btn-home" (click)="goHome()">דף הבית</button>
+  </div>
 
   <h2>פתיחת קריאה</h2>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="field">
-      <label>נושא</label>
-      <input type="text" formControlName="subject" />
-      <small *ngIf="form.controls.subject.invalid && form.controls.subject.touched">
-        נושא נדרש (לפחות 3 תווים).
+      <label for="subject">נושא <span class="req">*</span></label>
+      <input id="subject" type="text" formControlName="subject" [class.invalid]="form.controls.subject.invalid && form.controls.subject.touched" />
+      <small class="error" *ngIf="form.controls.subject.errors && form.controls.subject.touched">
+        <ng-container *ngIf="form.controls.subject.errors['required']">נושא נדרש.</ng-container>
+        <ng-container *ngIf="form.controls.subject.errors['minlength']">לפחות 3 תווים.</ng-container>
       </small>
     </div>
 
-    <div class="field" style="margin-top:12px;">
-      <label>תיאור</label>
-      <textarea rows="5" formControlName="description"></textarea>
-      <small *ngIf="form.controls.description.invalid && form.controls.description.touched">
-        תיאור נדרש (לפחות 10 תווים).
+    <div class="field">
+      <label for="description">תיאור <span class="req">*</span></label>
+      <textarea id="description" rows="5" formControlName="description" [class.invalid]="form.controls.description.invalid && form.controls.description.touched"></textarea>
+      <small class="error" *ngIf="form.controls.description.errors && form.controls.description.touched">
+        <ng-container *ngIf="form.controls.description.errors['required']">תיאור נדרש.</ng-container>
+        <ng-container *ngIf="form.controls.description.errors['minlength']">לפחות 10 תווים.</ng-container>
       </small>
     </div>
 
-    <div class="field" style="margin-top:12px;">
-      <label>עדיפות</label>
-      <select formControlName="priority">
+    <div class="field">
+      <label for="priority">עדיפות</label>
+      <select id="priority" formControlName="priority">
         <option value="Low">נמוכה</option>
         <option value="Medium">בינונית</option>
         <option value="High">גבוהה</option>
       </select>
     </div>
 
-    <div style="display:flex; gap:8px; align-items:center; margin-top:16px;">
-      <button type="submit" [disabled]="isSubmitting">
-        {{ isSubmitting ? 'שולח...' : 'פתח קריאה' }}
+    <div class="actions">
+      <button type="submit" class="btn-primary" [disabled]="isSubmitting || form.invalid">
+        {{ isSubmitting ? 'שולח…' : 'פתח קריאה' }}
       </button>
-    </div> 
-
+      <button type="button" class="btn-secondary" (click)="form.reset({ priority: 'Medium' })" [disabled]="isSubmitting">
+        נקה טופס
+      </button>
+    </div>
   </form>
 
-  <p *ngIf="serverMessage" style="margin-top:12px;">
+  <p *ngIf="serverMessage" class="server-msg" [class.success]="serverSuccess" [class.error]="!serverSuccess">
     {{ serverMessage }}
   </p>
 </div>
