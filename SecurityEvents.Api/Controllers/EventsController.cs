@@ -1,3 +1,5 @@
+//EventsController.cs
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
@@ -122,5 +124,7 @@ public class EventsController(AppDbContext db) : ControllerBase
 
         return NoContent();
     }
+
+
 
 }
