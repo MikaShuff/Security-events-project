@@ -137,7 +137,6 @@ C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\swae.build.ex.cache
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\Security.3B49C631.Up2Date
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.dll
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\refint\SecurityEvents.Api.dll

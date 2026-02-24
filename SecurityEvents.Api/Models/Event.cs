@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Event.cs
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SecurityEvents.Api.Models;
 
-[Keyless]
+[Key]
 [Table("events", Schema = "dbo")]
 [Index("OfficerId", Name = "IX_events_officer_id")]
 public partial class Event
 {
-    [Column("event_id")]
+    [Column("event_id")] 
     public int EventId { get; set; }
 
     [Column("date_modified", TypeName = "datetime")]
@@ -31,7 +33,7 @@ public partial class Event
     [Column("branch_num")]
     public int BranchNum { get; set; }
 
-    [Column("event_sum", TypeName = "decimal(18, 0)")]
+    [Column("event_sum", TypeName = "decimal(18, 2)")]
     public decimal EventSum { get; set; }
 
     [Column("handle_type")]
