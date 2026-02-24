@@ -8,22 +8,22 @@ public class EventCreateDto
     [Required]
     public DateTime EventDate { get; set; }
 
-    [Required]
+    [Range(1, int.MaxValue)]
     public int BranchNum { get; set; }
 
-    [Required]
+    [Range(1, int.MaxValue)]
     public int EventType { get; set; }
 
-    [Required]
+    [Range(1, int.MaxValue)]
     public int SubEventId { get; set; }
 
-    [Required]
+    [Range(1, int.MaxValue)]
     public int OfficerId { get; set; }
 
-    [Required]
+    [Range(1, int.MaxValue)]
     public int HandleType { get; set; }
 
-    [Required]
+    [Range(1, int.MaxValue)]
     public int StatusId { get; set; }
 
     public decimal? EventSum { get; set; }
