@@ -85,7 +85,42 @@ public class EventsController(AppDbContext db) : ControllerBase
         return Ok(item);
     }
 
-    
+    // POST /api/events
+
+    [HttpPost]
+    public async Task<ActionResult<Event>> Create([FromBody] EventCreateDto dto)
+    {
+        var entity = new Event
+        {
+            EventDate = dto.EventDate,
+            BranchNum = dto.BranchNum,
+
+            EventType = dto.EventType,
+            SubEventId = dto.SubEventId,
+
+            OfficerId = dto.OfficerId,
+            CustomerTz = dto.CustomerTz,
+
+            EventDesc = dto.EventDesc,
+            EventSum = dto.EventSum ?? 0m,   // <-- זה מתקן את שגיאת decimal?
+
+            HandleType = dto.HandleType,
+            HandleDesc = dto.HandleDesc,
+
+            Remark = dto.Remark,
+            StatusId = dto.StatusId,
+
+            CeoRemark = dto.CeoRemark,
+            DateModified = DateTime.Now
+        };
+
+        db.Events.Add(entity);
+        await db.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetById), new { id = entity.EventId }, entity);
+    }
+
+    // PUT /api/events/123
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] EventUpdateDto dto)
     {
@@ -112,6 +147,9 @@ public class EventsController(AppDbContext db) : ControllerBase
         await db.SaveChangesAsync();
         return Ok(entity);
     }
+
+    // DELETE /api/events/123
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
