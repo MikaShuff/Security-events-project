@@ -90,26 +90,29 @@ public class EventsController(AppDbContext db) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Event>> Create([FromBody] EventCreateDto dto)
     {
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
+
+        var officerExists = await db.Set<OfficersLookup>()
+            .AnyAsync(o => o.OfficerId == dto.OfficerId);
+
+        if (!officerExists)
+            return BadRequest($"OfficerId {dto.OfficerId} does not exist");
+
         var entity = new Event
         {
             EventDate = dto.EventDate,
             BranchNum = dto.BranchNum,
-
             EventType = dto.EventType,
             SubEventId = dto.SubEventId,
-
             OfficerId = dto.OfficerId,
             CustomerTz = dto.CustomerTz,
-
             EventDesc = dto.EventDesc,
-            EventSum = dto.EventSum ?? 0m,   // <-- זה מתקן את שגיאת decimal?
-
+            EventSum = dto.EventSum ?? 0m,
             HandleType = dto.HandleType,
             HandleDesc = dto.HandleDesc,
-
             Remark = dto.Remark,
             StatusId = dto.StatusId,
-
             CeoRemark = dto.CeoRemark,
             DateModified = DateTime.Now
         };

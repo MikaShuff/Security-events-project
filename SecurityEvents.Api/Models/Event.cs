@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SecurityEvents.Api.Models;
 
-[Key]
+
 [Table("events", Schema = "dbo")]
 [Index("OfficerId", Name = "IX_events_officer_id")]
 public partial class Event
 {
+    [Key]
     [Column("event_id")] 
     public int EventId { get; set; }
 
