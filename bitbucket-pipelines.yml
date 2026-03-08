@@ -13,5 +13,5 @@ pipelines:
         script:
           - dotnet --version
           - dotnet restore SecurityEvents.Api/SecurityEvents.Api.csproj
-          - dotnet build SecurityEvents.Api/SecurityEvents.Api.csproj --configuration Release --no-restore
+          - dotnet build SecurityEvents.Api/SecurityEvents.Api.csproj --configuration Release --no-restore -v minimal
           - dotnet test  SecurityEvents.Api/SecurityEvents.Api.csproj --configuration Release --no-build
