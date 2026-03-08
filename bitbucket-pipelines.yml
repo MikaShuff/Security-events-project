@@ -12,6 +12,6 @@ pipelines:
           - nuget
         script:
           - dotnet --version
-          - dotnet restore
-          - dotnet build --configuration Release
-          - dotnet test --no-build
+          - dotnet restore SecurityEvents.Api/SecurityEvents.Api.csproj
+          - dotnet build SecurityEvents.Api/SecurityEvents.Api.csproj --configuration Release --no-restore
+          - dotnet test  SecurityEvents.Api/SecurityEvents.Api.csproj --configuration Release --no-build
