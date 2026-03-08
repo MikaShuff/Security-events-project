@@ -2,7 +2,7 @@ image: mcr.microsoft.com/dotnet/sdk:8.0
 
 definitions:
   caches:
-    nuget: ~/.nuget/packages
+    nuget: /root/.nuget/packages
 
 pipelines:
   default:
