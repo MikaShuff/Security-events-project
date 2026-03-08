@@ -1,10 +1,15 @@
-
 image: mcr.microsoft.com/dotnet/sdk:8.0
+
+definitions:
+  caches:
+    nuget: ~/.nuget/packages
 
 pipelines:
   default:
     - step:
         name: Build .NET Backend
+        caches:
+          - nuget
         script:
           - dotnet --version
           - dotnet restore
