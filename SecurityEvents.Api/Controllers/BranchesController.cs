@@ -1,3 +1,5 @@
+//BranchesController.cs
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
@@ -10,6 +12,7 @@ namespace SecurityEvents.Api.Controllers;
 [Route("api/branches")]
 public class BranchesController(AppDbContext db) : ControllerBase
 {
+    //GET
     [HttpGet]
     public async Task<ActionResult<IEnumerable<LookupItemDto>>> Get()
     {
@@ -25,6 +28,51 @@ public class BranchesController(AppDbContext db) : ControllerBase
         return Ok(data);
     }
 
+    // GET /api/branches/123/details
+    [HttpGet("{branchId:int}/details")]
+    public async Task<ActionResult<BranchDetailsDto>> GetDetails(int branchId)
+    {
+        var result = await db.TAs400Branches
+            .Where(b => b.AbSnifId == branchId)
+            .Select(b => new BranchDetailsDto
+            {
+                BranchId = b.AbSnifId,
+                BranchName = b.AbSnifName,
+
+                CompanyId = b.AbReshetId,                   // קוד החברה
+                CompanyName = db.TAs400Companies
+                    .Where(c => c.AcHevraId == b.AbReshetId)
+                    .Select(c => c.AcHevraName)
+                    .FirstOrDefault(),                     // שם החברה
+
+                CompanyShort = db.TAs400Companies
+                    .Where(c => c.AcHevraId == b.AbReshetId)
+                    .Select(c => c.AcShortName)
+                    .FirstOrDefault(),
+
+                EshkolId = b.AbEshkolId,
+                EshkolName = db.TAs400Eshkols
+                    .Where(e => e.AeEshkolId == b.AbEshkolId)
+                    .Select(e => e.AeEshkolName)
+                    .FirstOrDefault(),
+
+                SecurityZoneId = b.Zones  // מתוך many-to-many
+                    .Select(z => (int?)z.ZoneId)
+                    .FirstOrDefault(),
+
+                SecurityZoneName = b.Zones
+                    .Select(z => z.ZoneName)
+                    .FirstOrDefault()
+            })
+            .FirstOrDefaultAsync();
+
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
+    }
+
+    //POST
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] BranchCreateDto dto)
     {
@@ -54,6 +102,7 @@ public class BranchesController(AppDbContext db) : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = branch.AbSnifId }, branch);
     }
 
+    //PUT
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] BranchUpdateDto dto)
     {
@@ -81,6 +130,7 @@ public class BranchesController(AppDbContext db) : ControllerBase
         return Ok(entity);
     }
 
+    //DELETE
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
