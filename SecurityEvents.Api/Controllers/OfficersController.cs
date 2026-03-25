@@ -16,11 +16,12 @@ public class OfficersController(AppDbContext db) : ControllerBase
     {
         var data = await db.Officers
             .AsNoTracking()
-            .OrderBy(x => x.OfficerName)
-            .Select(x => new OfficerListDto(
-                x.OfficerId,
-                x.OfficerName ?? x.OfficerId.ToString(),
-                x.ZoneId
+            .Include(o => o.Zone)   // ✅ טוען את האזור
+            .OrderBy(o => o.OfficerName)
+            .Select(o => new OfficerListDto(
+                o.OfficerId,
+                o.OfficerName ?? o.OfficerId.ToString(),
+                o.Zone.ZoneName ?? ""        // ✅ כאן הקסם קורה
             ))
             .ToListAsync();
 

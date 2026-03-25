@@ -3,5 +3,5 @@ namespace SecurityEvents.Api.Dtos;
 public record OfficerListDto(
     int OfficerId,
     string OfficerName,
-    int ZoneId
+    string ZoneName
 );
