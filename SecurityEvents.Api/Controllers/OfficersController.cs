@@ -12,16 +12,18 @@ public class OfficersController(AppDbContext db) : ControllerBase
 {
     // GET /api/officers  → LookupItemDto (id, name)
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LookupItemDto>>> Get()
+    public async Task<ActionResult<IEnumerable<OfficerListDto>>> Get()
     {
         var data = await db.Officers
             .AsNoTracking()
             .OrderBy(x => x.OfficerName)
-            .Select(x => new LookupItemDto(
+            .Select(x => new OfficerListDto(
                 x.OfficerId,
-                x.OfficerName ?? x.OfficerId.ToString()
+                x.OfficerName ?? x.OfficerId.ToString(),
+                x.ZoneId
             ))
             .ToListAsync();
+
         return Ok(data);
     }
 
