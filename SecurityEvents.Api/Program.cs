@@ -2,38 +2,48 @@
 
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var corsPolicyName = "AllowSecurityFrontend";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicyName, policy =>
+    {
+        policy.WithOrigins("http://security.shufersal.co.il")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddCors();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-
+// Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
 
+
+// HTTPS redirect only outside development (כמו אצלך)
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
 
-app.UseCors(p => p.
-    AllowAnyOrigin().
-    AllowAnyHeader().
-    AllowAnyMethod());
+
+//  CORS פעם אחת, עם policy אחת
+
+app.UseCors(corsPolicyName);
 
 app.UseAuthorization();
 
