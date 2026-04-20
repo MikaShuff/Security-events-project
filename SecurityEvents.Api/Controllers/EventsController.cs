@@ -60,10 +60,30 @@ public class EventsController(AppDbContext db) : ControllerBase
 
         // עימוד
         var data = await query
-            .OrderByDescending(e => e.EventDate)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+    .Join(
+        db.Statuses,
+        e => e.StatusId,
+        s => s.StatusId,
+        (e, s) => new EventListDto
+        {
+            EventId = e.EventId,
+            EventDate = e.EventDate,
+            BranchNum = e.BranchNum,
+            EventType = e.EventType,
+            SubEventId = e.SubEventId,
+            OfficerId = e.OfficerId,
+            HandleType = e.HandleType,
+            EventSum = e.EventSum,
+            EventDesc = e.EventDesc,
+
+            StatusId = e.StatusId,
+            StatusName = s.StatusDescription
+        }
+    )
+    .OrderByDescending(e => e.EventDate)
+    .Skip((page - 1) * pageSize)
+    .Take(pageSize)
+    .ToListAsync();
 
         // החזרת נתונים עם מטא-דאטה
         return Ok(new

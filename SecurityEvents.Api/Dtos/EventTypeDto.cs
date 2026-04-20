@@ -2,7 +2,7 @@
 {
     public class EventTypeDto
     {
-        public int EventType { get; set; }   
+        public int EventType { get; set; }
         public string EventName { get; set; } = string.Empty;
     }
 }
