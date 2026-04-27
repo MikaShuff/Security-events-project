@@ -42,6 +42,25 @@ public class OfficersController(AppDbContext db) : ControllerBase
         return Ok(o);
     }
 
+    // GET /api/officers/admin  -> רשימה עשירה למסך טבלאות מערכת (כולל ZoneName)
+    [HttpGet("admin")]
+    public async Task<ActionResult<IEnumerable<OfficerListDto>>> GetAdmin()
+    {
+        var data = await db.Officers
+            .AsNoTracking()
+            .Include(o => o.Zone)                 // <-- זה ה-JOIN בפועל דרך ZoneId
+            .OrderBy(o => o.OfficerName)
+            .Select(o => new OfficerListDto(
+                o.OfficerId,
+                o.OfficerName ?? o.OfficerId.ToString(),
+                o.Zone != null ? o.Zone.ZoneName : ""   // <-- ZoneName מהטבלה Zones
+            ))
+            .ToListAsync();
+
+        return Ok(data);
+    }
+
+
     // POST /api/officers → יצירת קב"ט חדש
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] OfficerCreateDto dto)
