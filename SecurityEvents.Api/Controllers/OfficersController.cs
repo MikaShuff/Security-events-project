@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//officersController.cs
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
 using SecurityEvents.Api.Dtos;
@@ -11,22 +13,22 @@ namespace SecurityEvents.Api.Controllers;
 public class OfficersController(AppDbContext db) : ControllerBase
 {
     // GET /api/officers  → LookupItemDto (id, name)
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<OfficerListDto>>> Get()
+    public async Task<ActionResult<IEnumerable<LookupItemDto>>> Get()
     {
         var data = await db.Officers
             .AsNoTracking()
-            .Include(o => o.Zone)   // ✅ טוען את האזור
             .OrderBy(o => o.OfficerName)
-            .Select(o => new OfficerListDto(
+            .Select(o => new LookupItemDto(
                 o.OfficerId,
-                o.OfficerName ?? o.OfficerId.ToString(),
-                o.Zone.ZoneName ?? ""        // ✅ כאן הקסם קורה
+                o.OfficerName ?? o.OfficerId.ToString()
             ))
             .ToListAsync();
 
         return Ok(data);
     }
+
 
     // GET /api/officers/{id} → מחזיר Entity מלא (לעריכה מתקדמת/דיבאג)
     [HttpGet("{id:int}")]
