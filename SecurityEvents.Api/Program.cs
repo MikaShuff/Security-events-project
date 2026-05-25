@@ -1,9 +1,12 @@
-// Program.cs
-
+ï»¿// Program.cs
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddSingleton<AdAuthService>();
 
 var corsPolicyName = "AllowSecurityFrontend";
 
@@ -11,17 +14,41 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://security.shufersal.co.il")
+        policy.WithOrigins("https://security.shufersal.co.il", "http://localhost:4200")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "sec_auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+
+        // For APIs return 401/403 instead of redirect to /Account/Login
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = ctx => { ctx.Response.StatusCode = 401; return Task.CompletedTask; },
+            OnRedirectToAccessDenied = ctx => { ctx.Response.StatusCode = 403; return Task.CompletedTask; },
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
@@ -33,20 +60,19 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 
-// HTTPS redirect only outside development (ëîå àöìê)
-
+// HTTPS redirect only outside development (×›××• ××¦×œ×š)
 if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
 
 
-//  CORS ôòí àçú, òí policy àçú
 
+//  CORS ×¤×¢× ××—×ª, ×¢× policy ××—×ª
 app.UseCors(corsPolicyName);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();
