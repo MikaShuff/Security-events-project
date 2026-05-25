@@ -79,4 +79,30 @@ public class AuthController : ControllerBase
             role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value
         });
     }
+
+    [AllowAnonymous]
+    [HttpPost("windows-login")]
+    public async Task<IActionResult> WindowsLogin()
+    {
+        // This requires Windows Authentication to be enabled (for this endpoint),
+        // so HttpContext.User is a Windows principal.
+        if (!(User?.Identity?.IsAuthenticated ?? false))
+            return Unauthorized();
+
+        var username = User.Identity!.Name ?? "unknown";
+
+        // TODO: map AD groups -> role (reuse your AdAuthService lookup-by-username, no password)
+        // For now, at least issue a cookie:
+        var claims = new List<Claim>
+    {
+        new(ClaimTypes.Name, username),
+        new(ClaimTypes.Role, "User"),
+    };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        return Ok(new { username });
+    }
 }
