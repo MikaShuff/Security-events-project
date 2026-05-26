@@ -30,6 +30,26 @@ public class EventsController(AppDbContext db) : ControllerBase
     {
         var query = db.Events.AsQueryable();
 
+        // formatId = companyId = AbReshetId on branch table
+        if (formatId.HasValue)
+        {
+            var branchNumsByCompany = db.TAs400Branches
+                .Where(b => b.AbReshetId == formatId.Value)
+                .Select(b => b.AbSnifId);
+
+            query = query.Where(e => branchNumsByCompany.Contains(e.BranchNum));
+        }
+
+        // zoneId lives in many-to-many: branch <-> zones
+        if (zoneId.HasValue)
+        {
+            var branchNumsByZone = db.TAs400Branches
+                .Where(b => b.Zones.Any(z => z.ZoneId == zoneId.Value))
+                .Select(b => b.AbSnifId);
+
+            query = query.Where(e => branchNumsByZone.Contains(e.BranchNum));
+        }
+
         // החל מסננים
         if (fromDate.HasValue)
             query = query.Where(e => e.EventDate >= fromDate.Value);
@@ -54,6 +74,8 @@ public class EventsController(AppDbContext db) : ControllerBase
 
         if (statusId.HasValue)
             query = query.Where(e => e.StatusId == statusId.Value);
+
+
 
         // ספירת סך הכל התוצאות
         var totalCount = await query.CountAsync();
