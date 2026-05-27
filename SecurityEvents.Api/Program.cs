@@ -60,11 +60,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 
-// HTTPS redirect only outside development (כמו אצלך)
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
+app.UseHttpsRedirection();
+
 
 
 
