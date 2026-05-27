@@ -30,7 +30,9 @@ public class EventsController(AppDbContext db) : ControllerBase
     {
         var query = db.Events.AsQueryable();
 
-        // formatId = companyId = AbReshetId on branch table
+        // החל מסננים
+
+        // לפי פורמט
         if (formatId.HasValue)
         {
             var branchNumsByCompany = db.TAs400Branches
@@ -40,7 +42,7 @@ public class EventsController(AppDbContext db) : ControllerBase
             query = query.Where(e => branchNumsByCompany.Contains(e.BranchNum));
         }
 
-        // zoneId lives in many-to-many: branch <-> zones
+        // לפי איזור
         if (zoneId.HasValue)
         {
             var branchNumsByZone = db.TAs400Branches
@@ -50,15 +52,25 @@ public class EventsController(AppDbContext db) : ControllerBase
             query = query.Where(e => branchNumsByZone.Contains(e.BranchNum));
         }
 
-        // החל מסננים
+        // לפי טווח תאריכים
         if (fromDate.HasValue)
-            query = query.Where(e => e.EventDate >= fromDate.Value);
+        {
+            var start = fromDate.Value.Date;
+            query = query.Where(e => e.EventDate >= start);
+        }
 
         if (toDate.HasValue)
-            query = query.Where(e => e.EventDate <= toDate.Value);
+        {
+            var endExclusive = toDate.Value.Date.AddDays(1); // כדי לכלול את כל האירועים ביום האחרון
+            query = query.Where(e => e.EventDate < endExclusive);
+        }
+
+        // לפי סוג אירוע 
 
         if (eventType.HasValue)
             query = query.Where(e => e.EventType == eventType.Value);
+
+        // לפי תת-סוג אירוע
 
         if (subEventId.HasValue)
             query = query.Where(e => e.SubEventId == subEventId.Value);
