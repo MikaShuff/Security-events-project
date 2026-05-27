@@ -57,7 +57,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Unauthorized(new { error = ex.ToString() });
+             return Unauthorized(new { error = "Invalid username or password" });;
         }
     }
 
