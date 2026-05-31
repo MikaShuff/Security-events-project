@@ -1,6 +1,7 @@
 ﻿//Controllers/AuthController.cs
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -80,19 +81,16 @@ public class AuthController : ControllerBase
         });
     }
 
-    [Authorize]
+
+    [Authorize(AuthenticationSchemes = NegotiateDefaults.AuthenticationScheme)]
     [HttpPost("windows-login")]
     public async Task<IActionResult> WindowsLogin()
     {
-        // This requires Windows Authentication to be enabled (for this endpoint),
-        // so HttpContext.User is a Windows principal.
         if (!(User?.Identity?.IsAuthenticated ?? false))
             return Unauthorized();
 
         var username = User.Identity!.Name ?? "unknown";
 
-        // TODO: map AD groups -> role (reuse your AdAuthService lookup-by-username, no password)
-        // For now, at least issue a cookie:
         var claims = new List<Claim>
     {
         new(ClaimTypes.Name, username),

@@ -23,31 +23,34 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.Name = "sec_auth";
-        options.Cookie.Domain = ".security.shufersal.co.il";
-        options.Cookie.Path = "/";
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.None;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+  .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+  .AddCookie(options =>
+  {
+      options.Cookie.Name = "sec_auth";
+      options.Cookie.Path = "/";
+      options.Cookie.HttpOnly = true;
+      options.Cookie.SameSite = SameSiteMode.None;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
-        // For APIs return 401/403 instead of redirect to /Account/Login
-        options.Events = new CookieAuthenticationEvents
-        {
-            OnRedirectToLogin = ctx => { ctx.Response.StatusCode = 401; return Task.CompletedTask; },
-            OnRedirectToAccessDenied = ctx => { ctx.Response.StatusCode = 403; return Task.CompletedTask; },
-        };
-    });
+      // IMPORTANT: don't set Domain on localhost
+      if (!builder.Environment.IsDevelopment())
+      {
+          options.Cookie.Domain = ".security.shufersal.co.il";
+      }
+
+      options.SlidingExpiration = true;
+      options.ExpireTimeSpan = TimeSpan.FromHours(8);
+
+      options.Events = new CookieAuthenticationEvents
+      {
+          OnRedirectToLogin = ctx => { ctx.Response.StatusCode = 401; return Task.CompletedTask; },
+          OnRedirectToAccessDenied = ctx => { ctx.Response.StatusCode = 403; return Task.CompletedTask; },
+      };
+  });
 
 builder.Services.AddAuthorization();
 
@@ -61,11 +64,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseHttpsRedirection();
-
-
-
 
 //  CORS פעם אחת, עם policy אחת
 app.UseCors(corsPolicyName);
