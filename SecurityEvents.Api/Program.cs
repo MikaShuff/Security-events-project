@@ -33,6 +33,8 @@ builder.Services
     .AddCookie(options =>
     {
         options.Cookie.Name = "sec_auth";
+        options.Cookie.Domain = ".security.shufersal.co.il";
+        options.Cookie.Path = "/";
         options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;

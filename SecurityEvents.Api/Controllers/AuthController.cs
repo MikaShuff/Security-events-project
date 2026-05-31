@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
             var (ok, displayName, groups) = _ad.Validate(req.Username, req.Password);
 
             if (!ok)
-                return Unauthorized(new { error = "Validate() returned ok=false" });
+                return Unauthorized(new { error = "Invalid username or password" });
 
             // AD group -> role mapping (by CN)
             string? role =
@@ -57,7 +57,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-             return Unauthorized(new { error = "Invalid username or password" });;
+             return Unauthorized(new { error = "Invalid username or password" });
         }
     }
 
