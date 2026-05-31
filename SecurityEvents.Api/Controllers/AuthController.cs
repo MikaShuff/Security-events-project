@@ -1,7 +1,6 @@
 ﻿// Controllers/AuthController.cs
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,12 +12,10 @@ namespace SecurityEvents.Api.Controllers;
 public sealed class AuthController : ControllerBase
 {
     private readonly AdAuthService _ad;
-    private readonly bool _windowsAuthEnabled;
 
-    public AuthController(AdAuthService ad, IConfiguration cfg)
+    public AuthController(AdAuthService ad)
     {
         _ad = ad;
-        _windowsAuthEnabled = cfg.GetValue<bool>("WindowsAuth:Enabled");
     }
 
     public record LoginRequest(string Username, string Password);
@@ -36,7 +33,7 @@ public sealed class AuthController : ControllerBase
 
         var role = MapRole(groups);
         if (role is null)
-            return Forbid(); // cleaner than StatusCode(403, ...)
+            return Forbid();
 
         await SignInCookie(req.Username, displayName ?? req.Username, role);
         return Ok(new { username = req.Username, role });
@@ -59,28 +56,6 @@ public sealed class AuthController : ControllerBase
             role = User.FindFirstValue(ClaimTypes.Role),
             displayName = User.FindFirstValue("displayName")
         });
-
-    // Windows SSO endpoint (only works when Negotiate is enabled on this host)
-    [Authorize(AuthenticationSchemes = NegotiateDefaults.AuthenticationScheme)]
-    [HttpPost("windows-login")]
-    public async Task<IActionResult> WindowsLogin()
-    {
-        if (!_windowsAuthEnabled)
-            return StatusCode(501, new { error = "Windows SSO is not enabled on this host" });
-
-        if (!(User?.Identity?.IsAuthenticated ?? false))
-            return Unauthorized();
-
-        var username = User.Identity?.Name;
-        if (string.IsNullOrWhiteSpace(username))
-            return Unauthorized();
-
-        var (displayName, groups) = _ad.LookupByWindowsIdentity(username);
-        var role = MapRole(groups) ?? "User";
-
-        await SignInCookie(username, displayName ?? username, role);
-        return Ok(new { username, role });
-    }
 
     private async Task SignInCookie(string username, string displayName, string role)
     {
@@ -106,5 +81,4 @@ public sealed class AuthController : ControllerBase
         if (set.Contains("Security_Events_Viewers")) return "Viewer";
         return null;
     }
-
 }

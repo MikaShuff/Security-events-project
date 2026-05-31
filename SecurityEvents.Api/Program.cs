@@ -1,6 +1,5 @@
 ﻿// Program.cs
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
@@ -30,8 +29,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Persist DP keys ONLY in production so api + win share cookie encryption keys.
-// (In dev, default ephemeral/user profile keys are fine.)
+
 if (!builder.Environment.IsDevelopment())
 {
     var keysPath = builder.Configuration["DataProtection:KeysPath"] ?? @"C:\inetpub\dpkeys\SecurityEvents";
@@ -42,9 +40,7 @@ if (!builder.Environment.IsDevelopment())
         .SetApplicationName(appName);
 }
 
-var enableWindowsAuth = builder.Configuration.GetValue<bool>("WindowsAuth:Enabled");
-
-var authBuilder = builder.Services
+builder.Services
     .AddAuthentication(options =>
     {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -57,14 +53,11 @@ var authBuilder = builder.Services
 
         if (builder.Environment.IsDevelopment())
         {
-            // DEV (localhost over http)
             options.Cookie.SameSite = SameSiteMode.Lax;
             options.Cookie.SecurePolicy = CookieSecurePolicy.None;
-            // don't set Domain in dev
         }
         else
         {
-            // PROD (cross-subdomain)
             options.Cookie.SameSite = SameSiteMode.None;
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Cookie.Domain = ".security.shufersal.co.il";
@@ -79,11 +72,6 @@ var authBuilder = builder.Services
             OnRedirectToAccessDenied = ctx => { ctx.Response.StatusCode = 403; return Task.CompletedTask; },
         };
     });
-
-if (enableWindowsAuth)
-{
-    authBuilder.AddNegotiate();
-}
 
 builder.Services.AddAuthorization();
 

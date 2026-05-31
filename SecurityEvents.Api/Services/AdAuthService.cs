@@ -1,4 +1,6 @@
-﻿using System.DirectoryServices.Protocols;
+﻿//AdAuthService.cs - provides Active Directory authentication and user info retrieval using LDAP.
+
+using System.DirectoryServices.Protocols;
 using System.Net;
 
 public sealed class AdAuthService
@@ -19,7 +21,7 @@ public sealed class AdAuthService
         _port = int.TryParse(cfg["Ldap:Port"], out var p) ? p : 636;
         _useSsl = !bool.TryParse(cfg["Ldap:UseSsl"], out var useSsl) || useSsl;
 
-        // Dev-only escape hatch for self-signed/untrusted LDAPS certs
+        // Dev-only escape hatch for untrusted LDAPS certs
         _skipCertValidation =
             env.IsDevelopment() &&
             bool.TryParse(cfg["Ldap:SkipCertValidation"], out var skip) &&
@@ -38,9 +40,7 @@ public sealed class AdAuthService
         var sam = ExtractSam(username);
         var bindUserUpn = username.Contains('@') ? username : $"{sam}@{_upnSuffix}";
 
-        using var conn = CreateConnection(
-            credential: new NetworkCredential(bindUserUpn, password),
-            authType: AuthType.Negotiate);
+        using var conn = CreateConnection(new NetworkCredential(bindUserUpn, password));
 
         try
         {
@@ -54,35 +54,15 @@ public sealed class AdAuthService
         return QueryUser(conn, sam);
     }
 
-    /// <summary>
-    /// Looks up displayName + group CNs using the current process identity
-    /// (IIS app pool / service account). Used for Windows SSO.
-    /// </summary>
-    public (string? displayName, List<string> groupCns) LookupByWindowsIdentity(string windowsIdentityName)
-    {
-        var sam = ExtractSam(windowsIdentityName);
-
-        using var conn = CreateConnection(
-            credential: null,              // use process identity
-            authType: AuthType.Negotiate); // works with Windows identity
-
-        conn.Bind();
-
-        var (ok, displayName, groups) = QueryUser(conn, sam);
-        return ok ? (displayName, groups) : (null, new());
-    }
-
     // -------------------- internals --------------------
 
-    private LdapConnection CreateConnection(NetworkCredential? credential, AuthType authType)
+    private LdapConnection CreateConnection(NetworkCredential credential)
     {
         var conn = new LdapConnection(new LdapDirectoryIdentifier(_host, _port))
         {
-            AuthType = authType
+            AuthType = AuthType.Negotiate,
+            Credential = credential
         };
-
-        if (credential != null)
-            conn.Credential = credential;
 
         conn.SessionOptions.ProtocolVersion = 3;
 
@@ -97,7 +77,6 @@ public sealed class AdAuthService
 
     private (bool ok, string? displayName, List<string> groupCns) QueryUser(LdapConnection conn, string sam)
     {
-        // Good default filter for AD user objects
         var filter =
             "(&" +
             "(objectCategory=person)" +
@@ -139,7 +118,6 @@ public sealed class AdAuthService
         if (attr == null || attr.Count == 0)
             return Array.Empty<string>();
 
-        // Cleanest way to get AD attribute values as strings without manual encoding guesses
         return attr.GetValues(typeof(string)).Cast<string>();
     }
 
@@ -147,17 +125,14 @@ public sealed class AdAuthService
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
-        // DOMAIN\user
         var idx = input.IndexOf('\\');
         if (idx >= 0 && idx < input.Length - 1)
             return input[(idx + 1)..];
 
-        // user@domain
         idx = input.IndexOf('@');
         if (idx > 0)
             return input[..idx];
 
-        // user
         return input;
     }
 
@@ -173,7 +148,6 @@ public sealed class AdAuthService
     {
         if (string.IsNullOrWhiteSpace(dn)) return null;
 
-        // DN format: CN=GroupName,OU=...,DC=...
         var first = dn.Split(',').FirstOrDefault();
         if (first != null && first.StartsWith("CN=", StringComparison.OrdinalIgnoreCase))
             return first.Substring(3);
