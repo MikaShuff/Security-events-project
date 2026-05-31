@@ -1,4 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
 <Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>\\Preiissrvdev\c$\inetpub\wwwroot\SecurityEvents\Api</_PublishTargetUrl>
+    <History>True|2026-05-31T09:07:36.4675186Z||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
 </Project>

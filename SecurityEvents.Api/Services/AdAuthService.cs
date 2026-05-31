@@ -1,211 +1,183 @@
-﻿//Services/AdAuthService.cs
-using System.DirectoryServices.Protocols;
+﻿using System.DirectoryServices.Protocols;
 using System.Net;
 
-public class AdAuthService
+public sealed class AdAuthService
 {
-    private readonly string _ldapHost;
-    private readonly int _ldapPort = 636;
+    private readonly string _host;
+    private readonly int _port;
+    private readonly bool _useSsl;
+    private readonly bool _skipCertValidation;
     private readonly string _baseDn;
     private readonly string _upnSuffix;
 
-    private static string DecodeLdapString(byte[] bytes)
+    public AdAuthService(IConfiguration cfg, IWebHostEnvironment env)
     {
-        // AD commonly uses UTF-8 for LDAP string values; if you see garbage,
-        // try Encoding.Unicode.
-        var s = System.Text.Encoding.UTF8.GetString(bytes);
+        _host = cfg["Ldap:Host"] ?? throw new InvalidOperationException("Missing config: Ldap:Host");
+        _baseDn = cfg["Ldap:BaseDn"] ?? throw new InvalidOperationException("Missing config: Ldap:BaseDn");
+        _upnSuffix = cfg["Ldap:UpnSuffix"] ?? throw new InvalidOperationException("Missing config: Ldap:UpnSuffix");
 
-        // If it doesn't look like a DN, try Unicode as fallback
-        if (!s.Contains("CN=", StringComparison.OrdinalIgnoreCase) && bytes.Length % 2 == 0)
-        {
-            var s2 = System.Text.Encoding.Unicode.GetString(bytes);
-            if (s2.Contains("CN=", StringComparison.OrdinalIgnoreCase))
-                return s2;
-        }
+        _port = int.TryParse(cfg["Ldap:Port"], out var p) ? p : 636;
+        _useSsl = !bool.TryParse(cfg["Ldap:UseSsl"], out var useSsl) || useSsl;
 
-        return s;
+        // Dev-only escape hatch for self-signed/untrusted LDAPS certs
+        _skipCertValidation =
+            env.IsDevelopment() &&
+            bool.TryParse(cfg["Ldap:SkipCertValidation"], out var skip) &&
+            skip;
     }
 
-    public AdAuthService(IConfiguration cfg)
-    {
-        _ldapHost = cfg["Ldap:Host"]!;
-        _baseDn = cfg["Ldap:BaseDn"]!;
-        _upnSuffix = cfg["Ldap:UpnSuffix"]!;
-    }
-
+    /// <summary>
+    /// Validates username+password by binding to LDAP with those credentials,
+    /// then returns displayName + group CNs.
+    /// </summary>
     public (bool ok, string? displayName, List<string> groupCns) Validate(string username, string password)
     {
-        var sam = username.Contains('\\') ? username.Split('\\')[1]
-        : username.Contains('@') ? username.Split('@')[0]
-        : username;
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            return (false, null, new());
 
-        // bind using UPN (no NetBIOS needed)
-        var bindUser = username.Contains("@") ? username : $"{sam}@{_upnSuffix}";
+        var sam = ExtractSam(username);
+        var bindUserUpn = username.Contains('@') ? username : $"{sam}@{_upnSuffix}";
 
-        // 1) Connect + bind (validates password)
-        using var conn = new LdapConnection(new LdapDirectoryIdentifier(_ldapHost, _ldapPort))
-        {
-            AuthType = AuthType.Negotiate,
-            Credential = new NetworkCredential(bindUser, password),
-        };
-
-        conn.SessionOptions.ProtocolVersion = 3;
-        conn.SessionOptions.SecureSocketLayer = true;
-
-        // IMPORTANT: in production you should validate the certificate properly.
-        // If you don’t have a trusted cert chain yet, you can temporarily allow it (dev only):
-        // conn.SessionOptions.VerifyServerCertificate += (_, __) => true;
+        using var conn = CreateConnection(
+            credential: new NetworkCredential(bindUserUpn, password),
+            authType: AuthType.Negotiate);
 
         try
         {
-            conn.Bind();
+            conn.Bind(); // validates password
         }
-        catch (Exception ex)
+        catch
         {
-            throw new Exception("LDAP bind failed: " + ex.Message, ex);
+            return (false, null, new());
         }
 
-        // 2) Search user by sAMAccountName
-        var filter = $"(sAMAccountName={EscapeLdapFilterValue(sam)})";
+        return QueryUser(conn, sam);
+    }
 
+    /// <summary>
+    /// Looks up displayName + group CNs using the current process identity
+    /// (IIS app pool / service account). Used for Windows SSO.
+    /// </summary>
+    public (string? displayName, List<string> groupCns) LookupByWindowsIdentity(string windowsIdentityName)
+    {
+        var sam = ExtractSam(windowsIdentityName);
 
+        using var conn = CreateConnection(
+            credential: null,              // use process identity
+            authType: AuthType.Negotiate); // works with Windows identity
 
-        var request = new SearchRequest(
+        conn.Bind();
+
+        var (ok, displayName, groups) = QueryUser(conn, sam);
+        return ok ? (displayName, groups) : (null, new());
+    }
+
+    // -------------------- internals --------------------
+
+    private LdapConnection CreateConnection(NetworkCredential? credential, AuthType authType)
+    {
+        var conn = new LdapConnection(new LdapDirectoryIdentifier(_host, _port))
+        {
+            AuthType = authType
+        };
+
+        if (credential != null)
+            conn.Credential = credential;
+
+        conn.SessionOptions.ProtocolVersion = 3;
+
+        if (_useSsl)
+            conn.SessionOptions.SecureSocketLayer = true;
+
+        if (_skipCertValidation)
+            conn.SessionOptions.VerifyServerCertificate += (_, __) => true;
+
+        return conn;
+    }
+
+    private (bool ok, string? displayName, List<string> groupCns) QueryUser(LdapConnection conn, string sam)
+    {
+        // Good default filter for AD user objects
+        var filter =
+            "(&" +
+            "(objectCategory=person)" +
+            "(objectClass=user)" +
+            $"(sAMAccountName={EscapeLdapFilterValue(sam)})" +
+            ")";
+
+        var req = new SearchRequest(
             _baseDn,
             filter,
             SearchScope.Subtree,
-            new[] { "displayName", "memberOf"});
+            "displayName",
+            "memberOf");
 
-        var response = (SearchResponse)conn.SendRequest(request);
+        var resp = (SearchResponse)conn.SendRequest(req);
+        var entry = resp.Entries.Count > 0 ? resp.Entries[0] : null;
 
-        var entry = response.Entries.Count > 0 ? response.Entries[0] : null;
         if (entry == null)
-            return (false, null, new List<string>());
+            return (false, null, new());
 
-        string? displayName = entry.Attributes["displayName"]?.Count > 0
-            ? entry.Attributes["displayName"][0]?.ToString()
-            : null;
+        var displayName = GetFirstString(entry, "displayName");
+        var groupDns = GetAllStrings(entry, "memberOf");
 
-        var groupCns = new List<string>();
-
-        foreach (string attrName in entry.Attributes.AttributeNames.Cast<string>())
-        {
-            if (!attrName.StartsWith("memberOf", StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            var memberOf = entry.Attributes[attrName];
-            if (memberOf == null) continue;
-
-            foreach (var g in memberOf)
-            {
-                string? dn = g switch
-                {
-                    string s => s,
-                    byte[] bytes => DecodeLdapString(bytes),
-                    _ => g?.ToString()
-                };
-
-                var cn = ParseCnFromDn(dn);
-                if (!string.IsNullOrWhiteSpace(cn))
-                    groupCns.Add(cn);
-            }
-        }
+        var groupCns = groupDns
+            .Select(ParseCnFromDn)
+            .Where(cn => !string.IsNullOrWhiteSpace(cn))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList()!;
 
         return (true, displayName, groupCns);
     }
 
+    private static string? GetFirstString(SearchResultEntry entry, string attributeName)
+        => GetAllStrings(entry, attributeName).FirstOrDefault();
 
+    private static IEnumerable<string> GetAllStrings(SearchResultEntry entry, string attributeName)
+    {
+        var attr = entry.Attributes[attributeName];
+        if (attr == null || attr.Count == 0)
+            return Array.Empty<string>();
+
+        // Cleanest way to get AD attribute values as strings without manual encoding guesses
+        return attr.GetValues(typeof(string)).Cast<string>();
+    }
+
+    private static string ExtractSam(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+        // DOMAIN\user
+        var idx = input.IndexOf('\\');
+        if (idx >= 0 && idx < input.Length - 1)
+            return input[(idx + 1)..];
+
+        // user@domain
+        idx = input.IndexOf('@');
+        if (idx > 0)
+            return input[..idx];
+
+        // user
+        return input;
+    }
 
     private static string EscapeLdapFilterValue(string value)
-    {
-        return value
+        => value
             .Replace("\\", "\\5c")
             .Replace("*", "\\2a")
             .Replace("(", "\\28")
             .Replace(")", "\\29")
             .Replace("\0", "\\00");
-    }
 
     private static string? ParseCnFromDn(string? dn)
     {
         if (string.IsNullOrWhiteSpace(dn)) return null;
-        var part = dn.Split(',').FirstOrDefault();
-        if (part != null && part.StartsWith("CN=", StringComparison.OrdinalIgnoreCase))
-            return part.Substring(3);
+
+        // DN format: CN=GroupName,OU=...,DC=...
+        var first = dn.Split(',').FirstOrDefault();
+        if (first != null && first.StartsWith("CN=", StringComparison.OrdinalIgnoreCase))
+            return first.Substring(3);
+
         return null;
-    }
-
-
-    public (string? displayName, List<string> groupCns) LookupByWindowsIdentity(string windowsIdentityName)
-    {
-        // windowsIdentityName can be:
-        // - DOMAIN\user
-        // - user@domain
-        // - user
-        var sam =
-            windowsIdentityName.Contains('\\') ? windowsIdentityName.Split('\\')[1] :
-            windowsIdentityName.Contains('@') ? windowsIdentityName.Split('@')[0] :
-            windowsIdentityName;
-
-        using var conn = new LdapConnection(new LdapDirectoryIdentifier(_ldapHost, _ldapPort))
-        {
-            // IMPORTANT:
-            // This uses the process identity (AppPool / service account) to query LDAP.
-            // Make sure that identity has permission to read user attributes & memberOf.
-            AuthType = AuthType.Negotiate,
-        };
-
-        conn.SessionOptions.ProtocolVersion = 3;
-        conn.SessionOptions.SecureSocketLayer = true;
-
-        // If you need this in dev only (self-signed cert), you can uncomment:
-        // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-        //     conn.SessionOptions.VerifyServerCertificate += (_, __) => true;
-
-        conn.Bind();
-
-        var filter = $"(sAMAccountName={EscapeLdapFilterValue(sam)})";
-        var request = new SearchRequest(
-            _baseDn,
-            filter,
-            SearchScope.Subtree,
-            new[] { "displayName", "memberOf" });
-
-        var response = (SearchResponse)conn.SendRequest(request);
-
-        var entry = response.Entries.Count > 0 ? response.Entries[0] : null;
-        if (entry == null)
-            return (null, new List<string>());
-
-        string? displayName = entry.Attributes["displayName"]?.Count > 0
-            ? entry.Attributes["displayName"][0]?.ToString()
-            : null;
-
-        var groupCns = new List<string>();
-
-        foreach (string attrName in entry.Attributes.AttributeNames.Cast<string>())
-        {
-            if (!attrName.StartsWith("memberOf", StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            var memberOf = entry.Attributes[attrName];
-            if (memberOf == null) continue;
-
-            foreach (var g in memberOf)
-            {
-                string? dn = g switch
-                {
-                    string s => s,
-                    byte[] bytes => DecodeLdapString(bytes),
-                    _ => g?.ToString()
-                };
-
-                var cn = ParseCnFromDn(dn);
-                if (!string.IsNullOrWhiteSpace(cn))
-                    groupCns.Add(cn);
-            }
-        }
-
-        return (displayName, groupCns);
     }
 }

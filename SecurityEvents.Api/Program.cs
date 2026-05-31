@@ -1,28 +1,18 @@
 ﻿// Program.cs
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using SecurityEvents.Api.Data;
-using Microsoft.AspNetCore.DataProtection;
 using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Share cookie encryption keys between api.security.* and win.security.*
-// so a cookie issued by WIN can be read by API.
-var keysPath = builder.Configuration["DataProtection:KeysPath"] ?? @"C:\inetpub\dpkeys\SecurityEvents";
-var appName = builder.Configuration["DataProtection:ApplicationName"] ?? "SecurityEvents";
-
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
-    .SetApplicationName(appName);
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<AdAuthService>();
 
 const string corsPolicyName = "AllowSecurityFrontend";
 
-// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
@@ -40,16 +30,23 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Toggle Windows Auth (Negotiate) by configuration
-// - Dev: false by default
-// - Win site in prod: set WindowsAuth:Enabled=true
+// Persist DP keys ONLY in production so api + win share cookie encryption keys.
+// (In dev, default ephemeral/user profile keys are fine.)
+if (!builder.Environment.IsDevelopment())
+{
+    var keysPath = builder.Configuration["DataProtection:KeysPath"] ?? @"C:\inetpub\dpkeys\SecurityEvents";
+    var appName = builder.Configuration["DataProtection:ApplicationName"] ?? "SecurityEvents";
+
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
+        .SetApplicationName(appName);
+}
+
 var enableWindowsAuth = builder.Configuration.GetValue<bool>("WindowsAuth:Enabled");
 
-// Authentication: Cookie always + Negotiate only when enabled
 var authBuilder = builder.Services
     .AddAuthentication(options =>
     {
-        // Most endpoints use cookies (after login)
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     })
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
@@ -57,19 +54,25 @@ var authBuilder = builder.Services
         options.Cookie.Name = "sec_auth";
         options.Cookie.Path = "/";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.None;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
-        // IMPORTANT: only set Domain in production (never on localhost)
-        if (!builder.Environment.IsDevelopment())
+        if (builder.Environment.IsDevelopment())
         {
+            // DEV (localhost over http)
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+            // don't set Domain in dev
+        }
+        else
+        {
+            // PROD (cross-subdomain)
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Cookie.Domain = ".security.shufersal.co.il";
         }
 
         options.SlidingExpiration = true;
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
 
-        // For APIs return 401/403 instead of redirect
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = ctx => { ctx.Response.StatusCode = 401; return Task.CompletedTask; },
@@ -79,7 +82,6 @@ var authBuilder = builder.Services
 
 if (enableWindowsAuth)
 {
-    // Needed only on the WIN host behind IIS Windows Authentication
     authBuilder.AddNegotiate();
 }
 
@@ -95,7 +97,6 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// CORS must be before auth
 app.UseCors(corsPolicyName);
 
 app.UseAuthentication();

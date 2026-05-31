@@ -10,15 +10,15 @@ namespace SecurityEvents.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController : ControllerBase
+public sealed class AuthController : ControllerBase
 {
     private readonly AdAuthService _ad;
-    private readonly IConfiguration _cfg;
+    private readonly bool _windowsAuthEnabled;
 
     public AuthController(AdAuthService ad, IConfiguration cfg)
     {
         _ad = ad;
-        _cfg = cfg;
+        _windowsAuthEnabled = cfg.GetValue<bool>("WindowsAuth:Enabled");
     }
 
     public record LoginRequest(string Username, string Password);
@@ -36,16 +36,9 @@ public class AuthController : ControllerBase
 
         var role = MapRole(groups);
         if (role is null)
-            return StatusCode(403, new { groups });
+            return Forbid(); // cleaner than StatusCode(403, ...)
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, req.Username),
-            new("displayName", displayName ?? req.Username),
-            new(ClaimTypes.Role, role),
-        };
-
-        await SignInCookie(claims);
+        await SignInCookie(req.Username, displayName ?? req.Username, role);
         return Ok(new { username = req.Username, role });
     }
 
@@ -60,70 +53,58 @@ public class AuthController : ControllerBase
     [Authorize]
     [HttpGet("me")]
     public IActionResult Me()
-    {
-        return Ok(new
+        => Ok(new
         {
             username = User.Identity?.Name,
-            role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
-            displayName = User.Claims.FirstOrDefault(c => c.Type == "displayName")?.Value
+            role = User.FindFirstValue(ClaimTypes.Role),
+            displayName = User.FindFirstValue("displayName")
         });
-    }
 
-    // Windows SSO endpoint (works only when Negotiate is enabled on this host)
+    // Windows SSO endpoint (only works when Negotiate is enabled on this host)
     [Authorize(AuthenticationSchemes = NegotiateDefaults.AuthenticationScheme)]
     [HttpPost("windows-login")]
     public async Task<IActionResult> WindowsLogin()
     {
-        // If Negotiate is not enabled on this host, this endpoint won't authenticate.
-        // But in that case we prefer a clear message:
-        var windowsEnabled = _cfg.GetValue<bool>("WindowsAuth:Enabled");
-        if (!windowsEnabled)
+        if (!_windowsAuthEnabled)
             return StatusCode(501, new { error = "Windows SSO is not enabled on this host" });
 
         if (!(User?.Identity?.IsAuthenticated ?? false))
             return Unauthorized();
 
-        var username = User.Identity?.Name ?? "unknown";
+        var username = User.Identity?.Name;
+        if (string.IsNullOrWhiteSpace(username))
+            return Unauthorized();
 
-        // Optional: lookup displayName + groups using AD without password
         var (displayName, groups) = _ad.LookupByWindowsIdentity(username);
         var role = MapRole(groups) ?? "User";
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, username),
-            new("displayName", displayName ?? username),
-            new(ClaimTypes.Role, role),
-        };
-
-        await SignInCookie(claims);
+        await SignInCookie(username, displayName ?? username, role);
         return Ok(new { username, role });
     }
 
-    private async Task SignInCookie(List<Claim> claims)
+    private async Task SignInCookie(string username, string displayName, string role)
     {
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Name, username),
+            new("displayName", displayName),
+            new(ClaimTypes.Role, role),
+        };
+
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
+
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
     }
 
-    private static string? MapRole(List<string> groups)
+    private static string? MapRole(IEnumerable<string> groups)
     {
-        if (groups.Contains("Security_Events_Admins")) return "Admin";
-        if (groups.Contains("Security_Events_Users")) return "User";
-        if (groups.Contains("Security_Events_Viewers")) return "Viewer";
+        var set = new HashSet<string>(groups ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
+
+        if (set.Contains("Security_Events_Admins")) return "Admin";
+        if (set.Contains("Security_Events_Users")) return "User";
+        if (set.Contains("Security_Events_Viewers")) return "Viewer";
         return null;
     }
 
-    [AllowAnonymous]
-    [HttpGet("debug/windows-auth")]
-    public IActionResult DebugWindowsAuth([FromServices] IConfiguration cfg)
-    {
-        return Ok(new
-        {
-            windowsAuthEnabled = cfg.GetValue<bool>("WindowsAuth:Enabled"),
-            environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
-            host = Request.Host.Value
-        });
-    }
 }

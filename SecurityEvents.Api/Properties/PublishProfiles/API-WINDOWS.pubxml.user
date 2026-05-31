@@ -3,7 +3,7 @@
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>\\Preiissrvdev\c$\inetpub\wwwroot\SecurityEvents\Api-Windows</_PublishTargetUrl>
-    <History>True|2026-05-31T08:38:05.8470959Z||;True|2026-05-31T11:19:11.8818533+03:00||;</History>
+    <History>True|2026-05-31T09:07:28.1665362Z||;True|2026-05-31T11:38:05.8470959+03:00||;True|2026-05-31T11:19:11.8818533+03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
