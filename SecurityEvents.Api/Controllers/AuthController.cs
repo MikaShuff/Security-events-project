@@ -80,7 +80,7 @@ public class AuthController : ControllerBase
         });
     }
 
-    [AllowAnonymous]
+    [Authorize]
     [HttpPost("windows-login")]
     public async Task<IActionResult> WindowsLogin()
     {
