@@ -134,4 +134,78 @@ public class AdAuthService
             return part.Substring(3);
         return null;
     }
+
+
+    public (string? displayName, List<string> groupCns) LookupByWindowsIdentity(string windowsIdentityName)
+    {
+        // windowsIdentityName can be:
+        // - DOMAIN\user
+        // - user@domain
+        // - user
+        var sam =
+            windowsIdentityName.Contains('\\') ? windowsIdentityName.Split('\\')[1] :
+            windowsIdentityName.Contains('@') ? windowsIdentityName.Split('@')[0] :
+            windowsIdentityName;
+
+        using var conn = new LdapConnection(new LdapDirectoryIdentifier(_ldapHost, _ldapPort))
+        {
+            // IMPORTANT:
+            // This uses the process identity (AppPool / service account) to query LDAP.
+            // Make sure that identity has permission to read user attributes & memberOf.
+            AuthType = AuthType.Negotiate,
+        };
+
+        conn.SessionOptions.ProtocolVersion = 3;
+        conn.SessionOptions.SecureSocketLayer = true;
+
+        // If you need this in dev only (self-signed cert), you can uncomment:
+        // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+        //     conn.SessionOptions.VerifyServerCertificate += (_, __) => true;
+
+        conn.Bind();
+
+        var filter = $"(sAMAccountName={EscapeLdapFilterValue(sam)})";
+        var request = new SearchRequest(
+            _baseDn,
+            filter,
+            SearchScope.Subtree,
+            new[] { "displayName", "memberOf" });
+
+        var response = (SearchResponse)conn.SendRequest(request);
+
+        var entry = response.Entries.Count > 0 ? response.Entries[0] : null;
+        if (entry == null)
+            return (null, new List<string>());
+
+        string? displayName = entry.Attributes["displayName"]?.Count > 0
+            ? entry.Attributes["displayName"][0]?.ToString()
+            : null;
+
+        var groupCns = new List<string>();
+
+        foreach (string attrName in entry.Attributes.AttributeNames.Cast<string>())
+        {
+            if (!attrName.StartsWith("memberOf", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var memberOf = entry.Attributes[attrName];
+            if (memberOf == null) continue;
+
+            foreach (var g in memberOf)
+            {
+                string? dn = g switch
+                {
+                    string s => s,
+                    byte[] bytes => DecodeLdapString(bytes),
+                    _ => g?.ToString()
+                };
+
+                var cn = ParseCnFromDn(dn);
+                if (!string.IsNullOrWhiteSpace(cn))
+                    groupCns.Add(cn);
+            }
+        }
+
+        return (displayName, groupCns);
+    }
 }
