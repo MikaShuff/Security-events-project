@@ -1,0 +1,32 @@
+<!-- src/app/layout/shell/shell.component.html -->
+<nav class="page-nav" dir="rtl" *ngIf="isLoggedIn$ | async">
+  <a
+    class="btn"
+    routerLink="/"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    דף הבית
+  </a>
+
+  <a class="btn" routerLink="/events" routerLinkActive="active">
+    אירועים
+  </a>
+
+  <a *ngIf="(role$ | async) === 'Admin'" class="btn" routerLink="/system-tables/branches" routerLinkActive="active">
+    טבלאות מערכת
+  </a>
+
+  <a *ngIf="['Admin','User'].includes((role$ | async) || '')"
+    class="btn success solid"
+    routerLink="/events/open"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    + אירוע חדש
+  </a>
+</nav>
+
+<section class="shell-content">
+  <router-outlet></router-outlet>
+</section>

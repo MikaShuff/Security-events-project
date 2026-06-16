@@ -1,30 +1,55 @@
 <!-- system-tables.component.html -->
-<section class="system-tables">
-  <h1>טבלאות מערכת</h1>
 
-  <div *ngIf="loading">טוען…</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
+<section class="system-tables-page">
 
-  <table *ngIf="!loading && !error && tables?.length" class="table">
-    <thead>
-      <tr>
-        <th>שם טבלה</th>
-        <th>תיאור</th>
-        <th>שורות</th>
-        <th>עודכן</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let t of tables">
-        <td>{{ t.name }}</td>
-        <td>{{ t.description }}</td>
-        <td>{{ t.rows | number }}</td>
-        <td>{{ t.updatedAt | date:'short' }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- NAVBAR פנימי של טבלאות מערכת -->
+  <nav class="inner-navbar">
+    <button routerLink="/system-tables/branches" routerLinkActive="active">סניפים</button>
+    <button routerLink="/system-tables/events" routerLinkActive="active">אירועים</button>
+    <button routerLink="/system-tables/event-types" routerLinkActive="active">סוגי אירועים</button>
+    <button routerLink="/system-tables/sub-event-types" routerLinkActive="active">תתי‑אירועים</button>
+    <button routerLink="/system-tables/formats" routerLinkActive="active">חברות</button>
+    <!--button routerLink="/system-tables/security-zones" routerLinkActive="active">אזורי ביטחון</button-->
+    <button routerLink="/system-tables/officers" routerLinkActive="active">קב"טים</button>
+    <button routerLink="/system-tables/zones" routerLinkActive="active">קשר סנ"פ‑אזור</button>
+    <button routerLink="/system-tables/handlings" routerLinkActive="active">אופן הטיפול</button>
+    <button routerLink="/system-tables/statuses" routerLinkActive="active">סטטוסים</button>
+  </nav>
 
-  <div *ngIf="!loading && !error && !tables?.length">
-    לא נמצאו טבלאות.
-  </div>
+  <!-- כאן נטען תת-העמוד (למשל sub-events) -->
+  <router-outlet #routerOutlet="outlet"></router-outlet>
+  <!-- התוכן הראשי יוצג רק כאשר אין תת-עמוד טעון -->
+  <section class="system-tables" *ngIf="!routerOutlet?.isActivated">
+
+    <h1>טבלאות מערכת</h1>
+
+    <div *ngIf="loading">טוען…</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <table *ngIf="!loading && !error && tables?.length" class="table">
+      <thead>
+        <tr>
+          <th>שם טבלה</th>
+          <th>תיאור</th>
+          <th>שורות</th>
+          <th>עודכן</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let t of tables">
+          <td>{{ t.name }}</td>
+          <td>{{ t.description }}</td>
+          <td>{{ t.rows | number }}</td>
+          <td>{{ t.updatedAt | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && !error && !tables?.length">
+      לא נמצאו טבלאות.
+    </div>
+
+  </section>
+
 </section>

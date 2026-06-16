@@ -1,0 +1,55 @@
+<h1 class="branches-title" align="right">טבלת אופן הטיפול</h1>
+
+<!-- TOOLBAR כמו בשאר המסכים -->
+<div class="toolbar">
+  <button class="btn-primary" (click)="onAdd()">אופן טיפול חדש</button>
+
+  <div class="filters">
+    <input [(ngModel)]="filter.id"   type="text" placeholder="קוד" />
+    <input [(ngModel)]="filter.name" type="text" placeholder="שם אופן טיפול" />
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>קוד טיפול</th>
+      <th>שם טיפול</th>
+      <th>פעולות</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <!-- 🔥 סינון לייב -->
+    <tr *ngFor="let r of filtered; trackBy: trackById">
+      <td>
+        <span *ngIf="r.id !== 0">{{ r.id }}</span>
+        <span *ngIf="r.id === 0">חדש</span>
+      </td>
+
+      <td *ngIf="!r._edit">{{ r.name }}</td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.name" placeholder="שם טיפול" />
+      </td>
+
+      <td class="actions">
+        <ng-container *ngIf="!r._edit; else editBtns">
+          <button class="btn-edit"   (click)="startEdit(r)">✏️</button>
+          <button class="btn-delete" (click)="onDelete(r)">🗑️</button>
+        </ng-container>
+
+        <ng-template #editBtns>
+          <button class="btn-save"   (click)="saveRow(r)">✔️</button>
+          <button class="btn-cancel" (click)="cancelEdit(r)">❌</button>
+        </ng-template>
+      </td>
+    </tr>
+
+    <tr *ngIf="!filtered.length">
+      <td colspan="3" style="text-align:center; padding:20px; color:#777;">
+        לא נמצאו נתונים
+      </td>
+    </tr>
+  </tbody>
+</table>
+``

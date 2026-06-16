@@ -1,0 +1,112 @@
+/* כותרת – זהה למסכים האחרים */
+.branches-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-align: right;
+  direction: rtl;
+}
+
+/* === TOOLBAR זהה === */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  direction: rtl;
+  margin-bottom: 12px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filters input {
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  width: 180px;
+  font-size: 14px;
+}
+
+/* === כפתורים – זהים למסכים האחרים === */
+button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn-edit {
+  background: #fbbf24;
+}
+
+.btn-delete {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-save {
+  background: #22c55e;
+  color: #fff;
+}
+
+.btn-cancel {
+  background: #64748b;
+  color: #fff;
+}
+
+/* === טבלה – אותו look & feel === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  direction: rtl;
+}
+
+thead th {
+  background: #f1f5f9;
+  padding: 10px;
+  font-weight: 600;
+  color: #334155;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: right;
+  user-select: none;
+  cursor: pointer;
+}
+
+tbody td {
+  padding: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+  text-align: right;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* עמודת פעולות */
+td.actions {
+  white-space: nowrap;
+}
+
+/* הודעת ריק */
+.empty {
+  text-align: center;
+  padding: 20px 0;
+  color: #777;
+}
+
+/* היילייט לעמודה ממוינת */
+.sorted {
+  color: #2563eb;
+}

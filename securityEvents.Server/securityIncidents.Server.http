@@ -1,6 +1,0 @@
-@securityIncidents.Server_HostAddress = http://localhost:5081
-
-GET {{securityIncidents.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -2,12 +2,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Event, EventQuery, PagedResponse } from './event.models';
+import { Event, EventQuery, PagedResponse } from './event.models'
+import { API_BASE } from '../config';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
   private http = inject(HttpClient);
-  private baseUrl = '/api/events';
+  private baseUrl = `${API_BASE}/api/events`;
 
   getAll(query?: EventQuery): Observable<PagedResponse<Event>> {
     let params = new HttpParams();

@@ -12,11 +12,25 @@ import { Event, EventQuery, LookupItem } from '../event.models';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './events-list.component.html',
-  styleUrls: ['./events-list.component.css']
+  styleUrls: ['./events-list.component.css'],
 })
 export class EventsListComponent implements OnInit {
   private eventsSrv = inject(EventsService);
   private lookupsSrv = inject(LookupsService);
+
+  todayISO = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  
+
+  onFromDateChanged() {
+  if (this.filters.fromDate && this.filters.toDate) {
+    if (this.filters.toDate < this.filters.fromDate) {
+      this.filters.toDate = this.filters.fromDate; // or set to null if you prefer
+    }
+  }
+}
+
+
+
 
   // נתונים להצגה
   events: Event[] = [];
@@ -42,15 +56,15 @@ export class EventsListComponent implements OnInit {
     handlingId?: number | null;
     statusId?: number | null;
   } = {
-      formatId: null,
-      branchId: null,
-      zoneId: null,
-      officerId: null,
-      eventTypeId: null,
-      subEventTypeId: null,
-      handlingId: null,
-      statusId: null
-    };
+    formatId: null,
+    branchId: null,
+    zoneId: null,
+    officerId: null,
+    eventTypeId: null,
+    subEventTypeId: null,
+    handlingId: null,
+    statusId: null,
+  };
 
   // רשימות לוקאפים
   formats: LookupItem[] = [];
@@ -74,42 +88,42 @@ export class EventsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLookups(); // נוריד לוקאפים במקביל
-    this.reload();      // נטען אירועים (עם/בלי סינון)
+    this.reload(); // נטען אירועים (עם/בלי סינון)
   }
 
   private loadLookups(): void {
     // כל אחד בנפרד – פשוט להבנה; אפשר גם עם forkJoin בהמשך
-    this.lookupsSrv.getFormats().subscribe(list => {
+    this.lookupsSrv.getFormats().subscribe((list) => {
       this.formats = list;
-      list.forEach(x => this.formatMap.set(x.id, x.name));
+      list.forEach((x) => this.formatMap.set(x.id, x.name));
     });
-    this.lookupsSrv.getBranches().subscribe(list => {
+    this.lookupsSrv.getBranches().subscribe((list) => {
       this.branches = list;
-      list.forEach(x => this.branchMap.set(x.id, x.name));
+      list.forEach((x) => this.branchMap.set(x.id, x.name));
     });
-    this.lookupsSrv.getZones().subscribe(list => {
+    this.lookupsSrv.getZones().subscribe((list) => {
       this.zones = list;
-      list.forEach(x => this.zoneMap.set(x.id, x.name));
+      list.forEach((x) => this.zoneMap.set(x.id, x.name));
     });
-    this.lookupsSrv.getOfficers().subscribe(list => {
+    this.lookupsSrv.getOfficers().subscribe((list) => {
       this.officers = list;
-      list.forEach(x => this.officerMap.set(x.id, x.name));
+      list.forEach((x) => this.officerMap.set(x.id, x.name));
     });
-    this.lookupsSrv.getEventTypes().subscribe(list => {
+    this.lookupsSrv.getEventTypes().subscribe((list) => {
       this.eventTypes = list;
-      list.forEach(x => this.eventTypeMap.set(x.id, x.name));
+      list.forEach((x) => this.eventTypeMap.set(x.id, x.name));
     });
-    this.lookupsSrv.getSubEventTypes().subscribe(list => {
+    this.lookupsSrv.getSubEventTypes().subscribe((list) => {
       this.subEventTypes = list;
-      list.forEach(x => this.subEventTypeMap.set(x.id, x.name));
+      list.forEach((x) => this.subEventTypeMap.set(x.id, x.name));
     });
-    this.lookupsSrv.getHandlings().subscribe(list => {
+    this.lookupsSrv.getHandlings().subscribe((list) => {
       this.handlings = list;
-      list.forEach(x => this.handlingMap.set(x.id, x.name));
+      list.forEach((x) => this.handlingMap.set(x.id, x.name));
     });
-    this.lookupsSrv.getStatuses().subscribe(list => {
+    this.lookupsSrv.getStatuses().subscribe((list) => {
       this.statuses = list;
-      list.forEach(x => this.statusMap.set(x.id, x.name));
+      list.forEach((x) => this.statusMap.set(x.id, x.name));
     });
   }
 
@@ -128,7 +142,7 @@ export class EventsListComponent implements OnInit {
       handlingId: f.handlingId ?? undefined,
       statusId: f.statusId ?? undefined,
       page: this.currentPage,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
     };
   }
 
@@ -150,7 +164,7 @@ export class EventsListComponent implements OnInit {
         console.error(err);
         this.error = 'שגיאה בטעינת אירועים.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -163,7 +177,7 @@ export class EventsListComponent implements OnInit {
       eventTypeId: null,
       subEventTypeId: null,
       handlingId: null,
-      statusId: null
+      statusId: null,
     };
     this.currentPage = 1; // חזרה לעמוד הראשון
     this.reload();
@@ -188,7 +202,10 @@ export class EventsListComponent implements OnInit {
   get pageNumbers(): number[] {
     const pages: number[] = [];
     const maxPagesToShow = 5;
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let startPage = Math.max(
+      1,
+      this.currentPage - Math.floor(maxPagesToShow / 2),
+    );
     let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
 
     if (endPage - startPage < maxPagesToShow - 1) {
@@ -206,5 +223,4 @@ export class EventsListComponent implements OnInit {
     if (id === null || id === undefined) return '';
     return map.get(id) ?? String(id);
   }
-
 }

@@ -31,14 +31,46 @@ public class EventsController(AppDbContext db) : ControllerBase
         var query = db.Events.AsQueryable();
 
         // החל מסננים
+
+        // לפי פורמט
+        if (formatId.HasValue)
+        {
+            var branchNumsByCompany = db.TAs400Branches
+                .Where(b => b.AbReshetId == formatId.Value)
+                .Select(b => b.AbSnifId);
+
+            query = query.Where(e => branchNumsByCompany.Contains(e.BranchNum));
+        }
+
+        // לפי איזור
+        if (zoneId.HasValue)
+        {
+            var branchNumsByZone = db.TAs400Branches
+                .Where(b => b.Zones.Any(z => z.ZoneId == zoneId.Value))
+                .Select(b => b.AbSnifId);
+
+            query = query.Where(e => branchNumsByZone.Contains(e.BranchNum));
+        }
+
+        // לפי טווח תאריכים
         if (fromDate.HasValue)
-            query = query.Where(e => e.EventDate >= fromDate.Value);
+        {
+            var start = fromDate.Value.Date;
+            query = query.Where(e => e.EventDate >= start);
+        }
 
         if (toDate.HasValue)
-            query = query.Where(e => e.EventDate <= toDate.Value);
+        {
+            var endExclusive = toDate.Value.Date.AddDays(1); // כדי לכלול את כל האירועים ביום האחרון
+            query = query.Where(e => e.EventDate < endExclusive);
+        }
+
+        // לפי סוג אירוע 
 
         if (eventType.HasValue)
             query = query.Where(e => e.EventType == eventType.Value);
+
+        // לפי תת-סוג אירוע
 
         if (subEventId.HasValue)
             query = query.Where(e => e.SubEventId == subEventId.Value);
@@ -55,15 +87,37 @@ public class EventsController(AppDbContext db) : ControllerBase
         if (statusId.HasValue)
             query = query.Where(e => e.StatusId == statusId.Value);
 
+
+
         // ספירת סך הכל התוצאות
         var totalCount = await query.CountAsync();
 
         // עימוד
         var data = await query
-            .OrderByDescending(e => e.EventDate)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+    .Join(
+        db.Statuses,
+        e => e.StatusId,
+        s => s.StatusId,
+        (e, s) => new EventListDto
+        {
+            EventId = e.EventId,
+            EventDate = e.EventDate,
+            BranchNum = e.BranchNum,
+            EventType = e.EventType,
+            SubEventId = e.SubEventId,
+            OfficerId = e.OfficerId,
+            HandleType = e.HandleType,
+            EventSum = e.EventSum,
+            EventDesc = e.EventDesc,
+
+            StatusId = e.StatusId,
+            StatusName = s.StatusDescription
+        }
+    )
+    .OrderByDescending(e => e.EventDate)
+    .Skip((page - 1) * pageSize)
+    .Take(pageSize)
+    .ToListAsync();
 
         // החזרת נתונים עם מטא-דאטה
         return Ok(new
@@ -85,7 +139,45 @@ public class EventsController(AppDbContext db) : ControllerBase
         return Ok(item);
     }
 
-    
+    // POST /api/events
+
+    [HttpPost]
+    public async Task<ActionResult<Event>> Create([FromBody] EventCreateDto dto)
+    {
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
+
+        var officerExists = await db.Set<OfficersLookup>()
+            .AnyAsync(o => o.OfficerId == dto.OfficerId);
+
+        if (!officerExists)
+            return BadRequest($"OfficerId {dto.OfficerId} does not exist");
+
+        var entity = new Event
+        {
+            EventDate = dto.EventDate,
+            BranchNum = dto.BranchNum,
+            EventType = dto.EventType,
+            SubEventId = dto.SubEventId,
+            OfficerId = dto.OfficerId,
+            CustomerTz = dto.CustomerTz,
+            EventDesc = dto.EventDesc,
+            EventSum = dto.EventSum ?? 0m,
+            HandleType = dto.HandleType,
+            HandleDesc = dto.HandleDesc,
+            Remark = dto.Remark,
+            StatusId = dto.StatusId,
+            CeoRemark = dto.CeoRemark,
+            DateModified = DateTime.Now
+        };
+
+        db.Events.Add(entity);
+        await db.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetById), new { id = entity.EventId }, entity);
+    }
+
+    // PUT /api/events/123
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] EventUpdateDto dto)
     {
@@ -112,6 +204,9 @@ public class EventsController(AppDbContext db) : ControllerBase
         await db.SaveChangesAsync();
         return Ok(entity);
     }
+
+    // DELETE /api/events/123
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

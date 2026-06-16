@@ -1,0 +1,51 @@
+<h1 class="branches-title" align="right">טבלת תתי-אירועים</h1>
+<div class="toolbar">
+  <label>
+    סוג אירוע:
+    <select [(ngModel)]="selectedEventType" (change)="loadSubEvents()">
+      <option *ngFor="let et of eventTypes" [ngValue]="et.id">{{ et.name }} ({{ et.id }})</option>
+    </select>
+  </label>
+
+  <button class="btn-primary" (click)="onAdd()" [disabled]="!selectedEventType">הוספה</button>
+  <button (click)="loadSubEvents()" [disabled]="!selectedEventType">רענון</button>
+</div>
+
+<div *ngIf="!selectedEventType" class="hint">
+  בחר סוג אירוע כדי להציג תתי־אירועים.
+</div>
+
+<table *ngIf="selectedEventType">
+  <thead>
+    <tr>
+      <th style="min-width:100px">קוד תת־אירוע</th>
+      <th style="min-width:260px">שם תת־אירוע</th>
+      <th>פעולות</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let r of rows; trackBy: trackById">
+      <td>
+        <span *ngIf="r.subEventId !== 0">{{ r.subEventId }}</span>
+        <span *ngIf="r.subEventId === 0">חדש</span>
+      </td>
+
+      <td *ngIf="!r._edit">{{ r.name }}</td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.name" placeholder="שם תת־אירוע" />
+      </td>
+
+      <td class="actions">
+        <ng-container *ngIf="!r._edit; else editBtns">
+          <button class="btn-edit" (click)="startEdit(r)">✏️</button>
+          <button class="btn-delete" (click)="onDelete(r)">🗑️</button>
+        </ng-container>
+        <ng-template #editBtns>
+          <button class="btn-save" (click)="saveRow(r)">✔️</button>
+          <button class="btn-cancel" (click)="cancelEdit(r)">❌</button>
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</table>

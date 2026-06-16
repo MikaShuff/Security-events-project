@@ -1,1 +1,32 @@
+/* src/styles.css */
+
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --app-font: 'Heebo', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+   --header-height: 0px; /* will be updated by AppComponent */
+
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--app-font);
+}
+
+body {
+  margin: 0;
+  overflow: hidden; /* IMPORTANT: prevent whole page scrolling */
+}
+
+/* Elements that don't always inherit font */
+button, input, textarea, select {
+  font-family: inherit;
+}
+
+/* main area under header should be the only scroller */
+.app-main {
+  height: calc(100vh - var(--header-height));
+  overflow: auto;
+  padding: 12px;
+  box-sizing: border-box;
+  min-height: 0;
+}

@@ -1,22 +1,73 @@
-/* header.component.css */
+/* src/app/core/header/header.component.css */
 
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 3000; /* מעל ה-backdrop */
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  z-index: 3000;
   background: #ffffff;
-  justify-content: flex-start; /* ה-nav מימין ב-RTL */
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px 16px;
+
+  /* clean alignment */
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* logo | title | user */
+  align-items: center;
+  gap: 12px;
 }
 
-.nav {
-  display: flex;
+/* logo */
+.logo-container {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* centered title */
+.topbar-title {
+  text-align: center;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+  color: #0f172a;
+}
+
+/* user area on the left (in RTL it will be visually left) */
+.user-area {
+  display: inline-flex;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
+}
+
+.userbox {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.userbox .role {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* logout as a small button */
+.logout-btn {
+  padding: 7px 10px;
+  border-radius: 10px;
+}
+/* שורה תחתונה: כפתורים */
+.nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 /* ===== Buttons ===== */
@@ -24,67 +75,79 @@
   appearance: none;
   border: 1.5px solid #e5e7eb;
   background: #ffffff;
-  color: #1f2937; 
+  color: #1f2937;
   padding: 9px 14px;
   border-radius: 10px;
   font-size: 14px;
   line-height: 1;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-  .btn:hover {
-    background: #f8fafc;
-    border-color: #d1d5db;
-  }
+.btn:hover {
+  background: #f8fafc;
+  border-color: #d1d5db;
+}
 
-  .btn:focus-visible {
-    outline: 2px solid #93c5fd;
-    outline-offset: 2px;
-  }
+.btn:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
 
-  .btn.active {
-    background: #2563eb;
-    color: #ffffff;
-    border-color: #2563eb;
-  }
+.btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
 
-  .btn.outline {
-    background: #ffffff;
-    color: #111827;
-    border-color: #cbd5e1;
-  }
+.btn.outline {
+  background: #ffffff;
+  color: #111827;
+  border-color: #cbd5e1;
+}
 
-  /* כפתור הדגשה ירוק (אחיד) */
-  .btn.success {
-    --btn-bg: #2e7d32;
-    --btn-bg-hover: #1b5e20;
-    --btn-text: #fff;
-    color: var(--btn-text);
-    background: var(--btn-bg);
-    border: 1px solid transparent;
-  }
+/* ירוק */
+.btn.success {
+  --btn-bg: #2e7d32;
+  --btn-bg-hover: #1b5e20;
+  --btn-text: #fff;
+  color: var(--btn-text);
+  background: var(--btn-bg);
+  border: 1px solid transparent;
+}
+.btn.success:hover {
+  background: var(--btn-bg-hover);
+}
 
-    .btn.success:hover {
-      background: var(--btn-bg-hover);
-    }
+/* כפתור "אירוע חדש" כשהוא פעיל יהפוך לכחול */
+a.btn.success.solid.active,
+.btn.success.solid.active {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
 
-  .btn.solid {
-    font-weight: 600;
-    padding: 8px 12px;
-    border-radius: 8px;
-  }
+.btn.solid {
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
 
 /* ===== Dropdown ===== */
 .menu {
   position: relative;
 }
 
-  .menu.open > .btn {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-  }
+.menu.open > .btn {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
 
 .dropdown {
   position: absolute;
@@ -95,33 +158,23 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   padding: 10px;
   z-index: 3100;
 }
 
-/* קונטיינר פעולה בתחתית הדרופדאון: יוצר רווח אנכי בין הכפתורים */
 .dropdown-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* זה הרווח ביניהם – אפשר 10px/12px לפי טעמך */
-  align-items: flex-start; /* הכפתורים צרים, מיושרים לימין (RTL) */
+  gap: 8px;
+  align-items: stretch;
   padding: 0 6px 6px;
 }
 
-/* כפתור קומפקטי */
 .btn.sm {
-  padding: 7px 12px; /* יותר צר מהברירת מחדל */
+  padding: 7px 12px;
   border-radius: 8px;
   font-size: 13px;
-}
-
-@media (max-width: 640px) {
-  .dropdown {
-    right: 3vw;
-    width: auto;
-    max-width: 94vw;
-  }
 }
 
 .dropdown-section {
@@ -149,12 +202,12 @@
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color .12s ease;
+  transition: background-color 0.12s ease;
 }
 
-  .dropdown-item:hover {
-    background: #f3f4f6;
-  }
+.dropdown-item:hover {
+  background: #f3f4f6;
+}
 
 .event-name {
   font-weight: 600;
@@ -178,11 +231,26 @@
   margin: 6px 0 10px;
 }
 
-
+/* backdrop */
 .backdrop {
   position: fixed;
   inset: 0;
   background: transparent;
-  z-index: 1000; 
-  pointer-events: none; 
+  z-index: 1000;
+  pointer-events: none;
+}
+
+
+
+/* רספונסיביות */
+@media (max-width: 720px) {
+  .topbar {
+    grid-template-columns: 1fr; /* stack */
+    justify-items: center;
+    row-gap: 8px;
+  }
+
+  .user-area {
+    justify-content: center;
+  }
 }

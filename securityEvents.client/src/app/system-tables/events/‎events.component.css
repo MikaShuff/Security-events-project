@@ -1,0 +1,87 @@
+/* עטיפה לטבלה – מונע בריחה מהמסך */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* טבלה יציבה גם במצב עריכה */
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  direction: rtl;
+}
+
+thead th {
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+  padding: 10px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* הקטנת קלטים בזמן עריכה */
+table input,
+table select {
+  width: 100%;
+  max-width: 140px;
+  box-sizing: border-box;
+}
+
+table input[type="datetime-local"] {
+  max-width: 190px;
+}
+
+/* שאר ה‑UI */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+  direction: rtl;
+}
+
+.filters input {
+  margin-inline-end: 8px;
+}
+
+.btn-primary, .btn-edit, .btn-delete, .btn-save, .btn-cancel {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-primary { background:#2563eb; color:#fff; }
+.btn-edit { background:#fbbf24; }
+.btn-delete { background:#ef4444; color:#fff; }
+.btn-save { background:#22c55e; color:#fff; }
+.btn-cancel { background:#64748b; color:#fff; }
+
+td.desc { max-width: 360px; }
+td.actions { white-space: nowrap; }
+
+.pager {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-top:10px;
+}
+.pager button {
+  padding:4px 8px;
+}

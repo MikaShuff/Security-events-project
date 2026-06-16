@@ -1,0 +1,64 @@
+<h1 class="branches-title" align="right">טבלת סניפים</h1>
+
+<div class="toolbar">
+
+    <!-- כפתור הוספה -->
+    <button class="btn-primary" (click)="onAdd()">
+        סניף חדש
+    </button>
+
+    <!-- חיפושים (Live Filter) -->
+    <div class="filters">
+
+        <!-- שינוי יחיד: type="text" כדי שהסינון יעבוד בזמן ההקלדה -->
+        <input 
+            [(ngModel)]="filter.id"
+            type="text"
+            placeholder="קוד סניף"
+        />
+
+        <input 
+            [(ngModel)]="filter.name"
+            type="text"
+            placeholder="שם סניף"
+        />
+
+    </div>
+
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>קוד סניף</th>
+            <th>שם סניף</th>
+            <th>פעולות</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let r of filtered; trackBy: trackById">
+
+            <td>
+                <span *ngIf="r.id !== 0">{{ r.id }}</span>
+                <span *ngIf="r.id === 0">חדש</span>
+            </td>
+
+            <td *ngIf="!r._edit">{{ r.name }}</td>
+            <td *ngIf="r._edit">
+                <input [(ngModel)]="r.name" placeholder="שם סניף" />
+            </td>
+
+            <td>
+                <!-- מצב תצוגה -->
+                <button class="btn-edit" *ngIf="!r._edit" (click)="startEdit(r)">✏️</button>
+                <button class="btn-delete" *ngIf="!r._edit" (click)="onDelete(r)">🗑️</button>
+
+                <!-- מצב עריכה -->
+                <button class="btn-save" *ngIf="r._edit" (click)="saveRow(r)">✔️</button>
+                <button class="btn-cancel" *ngIf="r._edit" (click)="cancelEdit(r)">❌</button>
+            </td>
+
+        </tr>
+    </tbody>
+</table>

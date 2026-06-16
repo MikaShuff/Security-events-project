@@ -1,79 +1,38 @@
 <!-- src/app/core/header/header.component.html -->
 
-<header class="topbar" dir="rtl">
-  <nav class="nav">
+<header id="app-header" class="topbar" dir="rtl">
+  <!-- right: logo (RTL right side) -->
+  <a class="logo-container" routerLink="/" (click)="closeMenus()">
+    <img
+      src="assets/images/logo.png"
+      alt="שופרסל - דף הבית"
+      class="logo-img"
+    />
+  </a>
 
-    <a class="btn"
-       routerLink="/"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{ exact: true }"
-       aria-label="דף הבית">
-      דף הבית
-    </a>
+  <!-- center: title -->
+  <div class="topbar-title" aria-label="שם המערכת">
+    מערכת ניהול אירועי ביטחון
+  </div>
 
-    <!-- דרופדאון אירועים -->
-    <div class="menu" [class.open]="eventsOpen">
-      <button class="btn"
-              (click)="$event.stopPropagation(); toggleEventsMenu()"
-              aria-haspopup="true"
-              [attr.aria-expanded]="eventsOpen"
-              aria-controls="events-menu">
-        אירועים ▾
-      </button>
-
-      <div id="events-menu"
-           class="dropdown"
-           *ngIf="eventsOpen"
-           (click)="$event.stopPropagation()">
-        <div class="dropdown-section">
-          <div class="dropdown-label">אירועים אחרונים</div>
-
-          <!-- מצבי טעינה/שגיאה -->
-          <div *ngIf="loading">טוען...</div>
-          <div *ngIf="error" class="dropdown-error">{{ error }}</div>
-
-          <!-- רשימת אירועים -->
-          <ul class="events-list" *ngIf="!loading && !error">
-            <li *ngFor="let ev of recentEvents"
-                class="dropdown-item"
-                (click)="openEvent(ev)"
-                tabindex="0"
-                role="menuitem">
-              <div class="event-name">{{ ev.name }}</div>
-              <div class="event-meta">{{ ev.date | date:'yyyy-MM-dd' }} • {{ ev.owner }}</div>
-            </li>
-
-            <li *ngIf="recentEvents.length === 0" class="dropdown-empty">
-              אין אירועים להצגה
-            </li>
-          </ul>
-        </div>
-
-        <!-- תחתית ה-dropdown -->
-        <div class="dropdown-divider"></div>
-
-        <div class="dropdown-actions">
-          <button type="button" class="btn outline sm" (click)="goToEvents($event)">
-            רשימת אירועים
-          </button>
-
-          <button type="button" class="btn success sm" (click)="openNewEvent($event)">
-            + הוספת אירוע חדש
-          </button>
-        </div>
-      </div>
+  <!-- left: user + logout -->
+  <div class="user-area">
+    <div class="userbox" *ngIf="me$ | async as me; else guest">
+      שלום, <strong>{{ me.username }}</strong>
+      <span class="role">({{ me.role }})</span>
     </div>
+    <ng-template #guest>
+      <div class="userbox">שלום, אורח</div>
+    </ng-template>
 
-
-    <a class="btn" routerLink="/admin/tables" routerLinkActive="active" aria-label="טבלאות מערכת">
-      טבלאות מערכת
-    </a>
-
-    <a class="btn success solid" routerLink="/tickets/open" aria-label="פתיחת אירוע חדש">
-      + אירוע חדש
-    </a>
-  </nav>
+    <button
+      class="btn logout-btn"
+      type="button"
+      (click)="logout()"
+      *ngIf="isLoggedIn$ | async"
+    >
+      יציאה
+    </button>
+  </div>
 </header>
 
-<!-- סגירה בלחיצה בחוץ -->
-<div class="backdrop" *ngIf="eventsOpen" (click)="closeMenus()"></div>

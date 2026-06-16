@@ -1,135 +1,182 @@
-<!-- פס סינון -->
-<section class="filters" dir="rtl">
-  <div class="row">
-    <div class="field">
-      <label>מתאריך</label>
-      <input type="date" [(ngModel)]="filters.fromDate" />
-    </div>
+<!-- Events page layout: filters + info + scrollable table + pagination -->
+<section class="events-page" dir="rtl">
+  <!-- Filters -->
+  <section class="filters">
+    <div class="row">
+      
+      <div class="field">
+        <label>מתאריך</label>
+        <input
+          type="date" 
+          [(ngModel)]="filters.fromDate"
+          (ngModelChange)="onFromDateChanged()"
+        />
+      </div>
 
-    <div class="field">
-      <label>עד תאריך</label>
-      <input type="date" [(ngModel)]="filters.toDate" />
-    </div>
+      <div class="field">
+        <label>עד תאריך</label>
+        <input
+          type="date"
+          [(ngModel)]="filters.toDate"
+          [min]="filters.fromDate || null"
+          [max]="todayISO"
+        />
+      </div>
+      
 
-    <div class="field">
-      <label>פורמט</label>
-      <select [(ngModel)]="filters.formatId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of formats" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>פורמט</label>
+        <select [(ngModel)]="filters.formatId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of formats" [ngValue]="x.id">
+            {{ x.name }}
+          </option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>סניף</label>
-      <select [(ngModel)]="filters.branchId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of branches" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>סניף</label>
+        <select [(ngModel)]="filters.branchId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of branches" [ngValue]="x.id">
+            {{ x.name }}
+          </option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>אזור ביטחון</label>
-      <select [(ngModel)]="filters.zoneId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of zones" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>אזור ביטחון</label>
+        <select [(ngModel)]="filters.zoneId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of zones" [ngValue]="x.id">{{ x.name }}</option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>קב"ט</label>
-      <select [(ngModel)]="filters.officerId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of officers" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>קב"ט</label>
+        <select [(ngModel)]="filters.officerId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of officers" [ngValue]="x.id">
+            {{ x.name }}
+          </option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>סוג אירוע</label>
-      <select [(ngModel)]="filters.eventTypeId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of eventTypes" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>סוג אירוע</label>
+        <select [(ngModel)]="filters.eventTypeId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of eventTypes" [ngValue]="x.id">
+            {{ x.name }}
+          </option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>תת סוג אירוע</label>
-      <select [(ngModel)]="filters.subEventTypeId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of subEventTypes" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>תת סוג אירוע</label>
+        <select [(ngModel)]="filters.subEventTypeId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of subEventTypes" [ngValue]="x.id">
+            {{ x.name }}
+          </option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>אופן טיפול</label>
-      <select [(ngModel)]="filters.handlingId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of handlings" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>אופן טיפול</label>
+        <select [(ngModel)]="filters.handlingId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of handlings" [ngValue]="x.id">
+            {{ x.name }}
+          </option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>סטטוס</label>
-      <select [(ngModel)]="filters.statusId">
-        <option [ngValue]="null">הכל</option>
-        <option *ngFor="let x of statuses" [ngValue]="x.id">{{ x.name }}</option>
-      </select>
-    </div>
+      <div class="field">
+        <label>סטטוס</label>
+        <select [(ngModel)]="filters.statusId">
+          <option [ngValue]="null">הכל</option>
+          <option *ngFor="let x of statuses" [ngValue]="x.id">
+            {{ x.name }}
+          </option>
+        </select>
+      </div>
 
-    <div class="actions">
-      <button (click)="reload()">הצג</button>
-      <button (click)="clearFilters()">ניקוי</button>
+      <div class="actions">
+        <button type="button" (click)="reload()">הצג</button>
+        <button type="button" (click)="clearFilters()">ניקוי</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading / Error -->
+  <div *ngIf="loading" class="status">טוען נתונים...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Results info -->
+  <div *ngIf="!loading && !error && totalCount > 0" class="results-info">
+    <p>
+      נמצאו <strong>{{ totalCount }}</strong> תוצאות | מציג
+      {{ events.length }} תוצאות בעמוד {{ currentPage }} מתוך {{ totalPages }}
+    </p>
+  </div>
+
+  <!-- Scrollable table area -->
+  <div class="table-wrap" *ngIf="!loading && !error">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>תאריך אירוע</th>
+          <th>סניף</th>
+          <th>סוג אירוע</th>
+          <th>תיאור אירוע</th>
+          <th>סכום</th>
+          <th>סטטוס</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let e of events">
+          <td>{{ e.eventDate | date: "dd/MM/yyyy" }}</td>
+          <td>{{ nameFrom(branchMap, e.branchNum) }}</td>
+          <td>{{ nameFrom(eventTypeMap, e.eventType) }}</td>
+          <td class="desc" [title]="e.eventDesc">{{ e.eventDesc }}</td>
+          <td>{{ e.eventSum | number: "1.0-0" }} ₪</td>
+          <td>{{ nameFrom(statusMap, e.statusId) }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="events.length === 0" class="no-results">
+      <p>לא נמצאו תוצאות</p>
     </div>
   </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && !error && totalPages > 1" class="pagination">
+    <button
+      type="button"
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+    >
+      הקודם
+    </button>
+
+    <button
+      type="button"
+      *ngFor="let page of pageNumbers"
+      (click)="goToPage(page)"
+      [class.active]="page === currentPage"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      type="button"
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      הבא
+    </button>
+  </div>
 </section>
-
-<!-- מצב טעינה/שגיאה -->
-<div *ngIf="loading">טוען נתונים...</div>
-<div *ngIf="error" class="error">{{ error }}</div>
-
-<!-- מידע על תוצאות -->
-<div *ngIf="!loading && !error && totalCount > 0" class="results-info" dir="rtl">
-  <p>נמצאו <strong>{{ totalCount }}</strong> תוצאות | מציג {{ events.length }} תוצאות בעמוד {{ currentPage }} מתוך {{ totalPages }}</p>
-</div>
-
-<!-- טבלת תוצאות -->
-<table class="table" *ngIf="!loading && !error" dir="rtl">
-  <thead>
-    <tr>
-      <th>תאריך אירוע</th>
-      <th>סניף</th>
-      <th>סוג אירוע</th>
-      <th>תיאור אירוע</th>
-      <th>סכום</th>
-      <th>סטטוס</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let e of events">
-      <td>{{ e.eventDate | date:'dd/MM/yyyy' }}</td>
-      <td>{{ nameFrom(branchMap, e.branchNum) }}</td>
-      <td>{{ nameFrom(eventTypeMap, e.eventType) }}</td>
-      <td>{{ e.eventDesc }}</td>
-      <td>{{ e.eventSum | number:'1.0-0' }} ₪</td>
-      <td>{{ nameFrom(statusMap, e.statusId) }}</td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- הודעה אם אין תוצאות -->
-<div *ngIf="!loading && !error && events.length === 0" class="no-results" dir="rtl">
-  <p>לא נמצאו תוצאות</p>
-</div>
-
-<!-- עימוד -->
-<div *ngIf="!loading && !error && totalPages > 1" class="pagination" dir="rtl">
-  <button (click)="previousPage()" [disabled]="currentPage === 1">הקודם</button>
-
-  <button *ngFor="let page of pageNumbers"
-          (click)="goToPage(page)"
-          [class.active]="page === currentPage">
-    {{ page }}
-  </button>
-
-  <button (click)="nextPage()" [disabled]="currentPage === totalPages">הבא</button>
-</div>

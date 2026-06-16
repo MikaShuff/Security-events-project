@@ -1,0 +1,107 @@
+/* כותרת */
+.branches-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-align: right;
+  direction: rtl;
+}
+
+/* === TOOLBAR כמו אירועים === */
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 12px;
+  direction: rtl;
+}
+
+/* אזור פקד החיפוש */
+.filters {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+/* שדות קלט */
+.filters input {
+  padding: 6px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 180px; /* שווה לשדות באירועים */
+}
+
+/* כפתור "סניף חדש" */
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* שאר הכפתורים */
+.btn-edit {
+  background: #fbbf24;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-delete {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-save {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-cancel {
+  background: #64748b;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* טבלה */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  direction: rtl;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead th {
+  background: #f1f5f9;
+  padding: 10px;
+  font-weight: 600;
+  color: #334155;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: right;
+}
+
+tbody td {
+  padding: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}

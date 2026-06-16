@@ -1,16 +1,59 @@
 <!-- src/app/home/home.component.html -->
 
-<div class="container" style="max-width: 640px; margin: 24px auto; padding: 12px;">
-  <h1 id="tableLabel">SIMS</h1>
-  <h2>Security Incidents Management System!</h2>
+<div class="home rtl">
+  <section class="hero">
+    <h2 class="subtitle">דשבורד מהיר לניטור אירועים ומדדים מרכזיים</h2>
+  </section>
 
-  <main style="padding: 16px;">
-    <router-outlet></router-outlet>
-  </main>
+  <!-- KPIs -->
+  <section class="kpis" aria-label="מדדים מרכזיים">
+    <div class="kpi-card">
+      <div class="kpi-label">סה״כ אירועים</div>
+      <div class="kpi-value">{{ stats.total }}</div>
+    </div>
 
-  <p style="margin: 8px 0 16px;">
-    ברוכה הבאה! מכאן אפשר לפתוח אירוע חדש.
-  </p>
+    <div class="kpi-card">
+      <div class="kpi-label">אירועים פתוחים</div>
+      <div class="kpi-value">{{ stats.open }}</div>
+    </div>
 
-  <a class="btn-primary" routerLink="/tickets/open">➕ פתיחת אירוע חדש</a>
+    <div class="kpi-card">
+      <div class="kpi-label">נפתחו היום</div>
+      <div class="kpi-value">{{ stats.today }}</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">נפתחו השבוע</div>
+      <div class="kpi-value">{{ stats.week }}</div>
+    </div>
+  </section>
+
+  <!-- Recent -->
+  <section class="recent card" aria-label="אירועים אחרונים">
+    <div class="card-header">
+      <h2>אירועים אחרונים</h2>
+      <a class="link" routerLink="/events">לכל האירועים</a>
+    </div>
+
+    <div class="state" *ngIf="loading">טוען…</div>
+    <div class="state error" *ngIf="error">{{ error }}</div>
+
+    <ul class="recent-list" *ngIf="!loading && !error">
+      <li class="recent-item" *ngFor="let ev of recentEvents">
+        <div class="ri-main">
+          <div class="ri-title">{{ ev.title }}</div>
+          <div class="ri-meta">
+            {{ ev.date | date: "yyyy-MM-dd HH:mm" }}
+            <span class="dot">•</span>
+            {{ ev.status }}
+          </div>
+        </div>
+        <a class="btn sm" [routerLink]="['/events']">צפייה</a>
+      </li>
+
+      <li class="state muted" *ngIf="recentEvents.length === 0">
+        אין אירועים להצגה
+      </li>
+    </ul>
+  </section>
 </div>

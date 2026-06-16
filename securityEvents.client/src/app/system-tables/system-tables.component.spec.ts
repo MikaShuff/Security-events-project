@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SystemTablesComponent } from './system-tables.component';
+import { RouterTestingModule } from '@angular/router/testing';
+
 
 describe('SystemTablesComponent', () => {
   let component: SystemTablesComponent;
@@ -8,7 +9,8 @@ describe('SystemTablesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SystemTablesComponent]
+      imports: [SystemTablesComponent, 
+        RouterTestingModule]
     })
     .compileComponents();
 

@@ -1,0 +1,69 @@
+<h1 class="branches-title" align="right">טבלת חברות</h1>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <button class="btn-primary" (click)="onAdd()">חברה חדשה</button>
+
+  <div class="filters">
+    <input [(ngModel)]="filter.id"    type="text" placeholder="קוד" />
+    <input [(ngModel)]="filter.name"  type="text" placeholder="שם חברה" />
+    <input [(ngModel)]="filter.short" type="text" placeholder="שם קצר" />
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>קוד</th>
+      <th>שם חברה</th>
+      <th>שם קצר</th>
+      <th>עודכן</th>
+      <th>פעולות</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let r of filtered; trackBy: trackById">
+
+      <td>{{ r.id }}</td>
+
+      <!-- שם -->
+      <td *ngIf="!r._edit">{{ r.name }}</td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.name" placeholder="שם חברה" />
+      </td>
+
+      <!-- שם קצר -->
+      <td *ngIf="!r._edit">{{ r.shortName }}</td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.shortName" placeholder="שם קצר" />
+      </td>
+
+      <!-- תאריך עדכון -->
+      <td *ngIf="!r._edit">{{ r.updated }}</td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.updated" type="date" />
+      </td>
+
+      <!-- פעולות -->
+      <td class="actions">
+
+        <ng-container *ngIf="!r._edit; else editMode">
+          <button class="btn-edit" (click)="startEdit(r)">✏️</button>
+          <button class="btn-delete" (click)="onDelete(r)">🗑️</button>
+        </ng-container>
+
+        <ng-template #editMode>
+          <button class="btn-save" (click)="saveRow(r)">✔️</button>
+          <button class="btn-cancel" (click)="cancelEdit(r)">❌</button>
+        </ng-template>
+
+      </td>
+
+    </tr>
+
+    <tr *ngIf="!filtered.length">
+      <td colspan="5" style="text-align:center; padding:20px;">לא נמצאו נתונים</td>
+    </tr>
+  </tbody>
+</table>

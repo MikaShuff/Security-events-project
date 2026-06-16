@@ -1,0 +1,66 @@
+<h1 class="branches-title" align="right">טבלת קב"טים</h1>
+
+<div class="toolbar">
+  <button class="btn-primary" (click)="onAdd()">קב"ט חדש</button>
+
+  <div class="filters">
+    <input [(ngModel)]="filter.id"   type="text" placeholder="קוד קב&quot;ט" />
+    <input [(ngModel)]="filter.name" type="text" placeholder="שם קב&quot;ט" />
+    <input [(ngModel)]="filter.zone" type="text" placeholder="שם אזור ביטחון" />
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>קוד</th>
+      <th>שם</th>
+      <th>אזור ביטחון</th>
+      <th>פעולות</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let r of filteredRows; trackBy: trackById">
+
+      <td>
+        <span *ngIf="r.officerId !== 0">{{ r.officerId }}</span>
+        <span *ngIf="r.officerId === 0">חדש</span>
+      </td>
+
+      <td *ngIf="!r._edit">{{ r.officerName }}</td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.officerName" placeholder='שם קב&quot;ט' />
+      </td>
+
+      <td *ngIf="!r._edit">
+        {{ r.zoneName || '—' }}
+      </td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.zoneName" placeholder="שם אזור" />
+      </td>
+
+      <td class="actions">
+
+        <ng-container *ngIf="!r._edit; else editMode">
+          <button class="btn-edit" (click)="startEdit(r)">✏️</button>
+          <button class="btn-delete" (click)="onDelete(r)">🗑️</button>
+        </ng-container>
+
+        <ng-template #editMode>
+          <button class="btn-save" (click)="saveRow(r)">✔️</button>
+          <button class="btn-cancel" (click)="cancelEdit(r)">❌</button>
+        </ng-template>
+
+      </td>
+
+    </tr>
+
+    <tr *ngIf="!filteredRows.length">
+      <td colspan="4" style="text-align:center; padding:20px; color:#777;">
+        לא נמצאו נתונים
+      </td>
+    </tr>
+
+  </tbody>
+</table>

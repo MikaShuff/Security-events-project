@@ -1,1 +1,11 @@
-{"Version":1,"Hash":"rC1mb1khbq2XtGnamHwKdhHITeRXv9dyVIarsHOx1yY=","Source":"SecurityEvents.Api","BasePath":"/","Mode":"Root","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "VrCLYuGvAH2PxHweuJM/RulxVye2ZDGEcrWbvvZtEWQ=",
+  "Source": "SecurityEvents.Api",
+  "BasePath": "_content/SecurityEvents.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

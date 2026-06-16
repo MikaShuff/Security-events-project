@@ -1,0 +1,15 @@
+s/
+obj/
+bin/
+
+.vs/
+
+.vs/
+
+obj/
+
+bin/
+
+publish/
+
+*.csproj.user

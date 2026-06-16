@@ -1,5 +1,5 @@
 
-// securityevents.client/proxy.conf.js
+//src/proxy.conf.js
 
 module.exports = [
   {

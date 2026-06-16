@@ -1,0 +1,52 @@
+<h1 class="branches-title" align="right">טבלת סטטוסים</h1>
+
+<!-- Toolbar של חיפוש בלבד (בלי כפתור) -->
+<div class="toolbar">
+  <div class="filters">
+    <input [(ngModel)]="filter.id"   type="text" placeholder="קוד סטטוס" />
+    <input [(ngModel)]="filter.name" type="text" placeholder="תיאור סטטוס" />
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>קוד סטטוס</th>
+      <th>תיאור סטטוס</th>
+      <th>פעולות</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <!-- 🔥 סינון לייב -->
+    <tr *ngFor="let r of filtered; trackBy: trackById">
+      <td>
+        <span *ngIf="r.id !== 0">{{ r.id }}</span>
+        <span *ngIf="r.id === 0">חדש</span>
+      </td>
+
+      <td *ngIf="!r._edit">{{ r.name }}</td>
+      <td *ngIf="r._edit">
+        <input [(ngModel)]="r.name" placeholder="תיאור סטטוס" />
+      </td>
+
+      <td>
+        <ng-container *ngIf="!r._edit; else editBtns">
+          <button class="btn-edit"   (click)="startEdit(r)">✏️</button>
+          <button class="btn-delete" (click)="onDelete(r)">🗑️</button>
+        </ng-container>
+
+        <ng-template #editBtns>
+          <button class="btn-save"   (click)="saveRow(r)">✔️</button>
+          <button class="btn-cancel" (click)="cancelEdit(r)">❌</button>
+        </ng-template>
+      </td>
+    </tr>
+
+    <tr *ngIf="!filtered.length">
+      <td colspan="3" style="text-align:center; padding:20px; color:#777;">
+        לא נמצאו נתונים
+      </td>
+    </tr>
+  </tbody>
+</table>

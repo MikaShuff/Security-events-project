@@ -1,0 +1,96 @@
+<h1 class="branches-title" align="right">טבלת אירועים</h1>
+
+<div class="toolbar">
+  <button class="btn-primary" (click)="onAdd()">אירוע חדש</button>
+
+  <div class="filters">
+    <input [(ngModel)]="filter.text" placeholder="חיפוש בתיאור/הערות…" />
+    <input [(ngModel)]="filter.branchNum" type="text" placeholder="סניף" />
+    <input [(ngModel)]="filter.eventType" type="text" placeholder="סוג אירוע" />
+    <input [(ngModel)]="filter.statusId" type="text" placeholder="סטטוס" />
+  </div>
+</div>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>מס'</th>
+        <th>תאריך</th>
+        <th>סניף</th>
+        <th>סוג</th>
+        <th>תת-סוג</th>
+        <th>קב"ט</th>
+        <th>טיפול</th>
+        <th>סטטוס</th>
+        <th>סכום</th>
+        <th style="min-width:220px">תיאור</th>
+        <th>פעולות</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let r of filteredRows; trackBy: trackById">
+
+        <td>{{ r.id }}</td>
+
+        <td *ngIf="!r._edit">{{ r.eventDateLocal.replace('T',' ') }}</td>
+        <td *ngIf="r._edit">
+          <input type="datetime-local" [(ngModel)]="r.eventDateLocal" />
+        </td>
+
+        <td *ngIf="!r._edit">{{ r.branchNum }}</td>
+        <td *ngIf="r._edit"><input type="text" [(ngModel)]="r.branchNum" /></td>
+
+        <td *ngIf="!r._edit">{{ r.eventType }}</td>
+        <td *ngIf="r._edit"><input type="text" [(ngModel)]="r.eventType" /></td>
+
+        <td *ngIf="!r._edit">{{ r.subEventId }}</td>
+        <td *ngIf="r._edit"><input type="text" [(ngModel)]="r.subEventId" /></td>
+
+        <td *ngIf="!r._edit">{{ r.officerId }}</td>
+        <td *ngIf="r._edit"><input type="text" [(ngModel)]="r.officerId" /></td>
+
+        <td *ngIf="!r._edit">{{ r.handleType }}</td>
+        <td *ngIf="r._edit"><input type="text" [(ngModel)]="r.handleType" /></td>
+
+        <!-- ✅ כאן מוצג שם הסטטוס -->
+        <td *ngIf="!r._edit">{{ r.statusName }}</td>
+        <td *ngIf="r._edit"><input type="number" [(ngModel)]="r.statusId" /></td>
+
+        <td *ngIf="!r._edit">{{ r.eventSum }}</td>
+        <td *ngIf="r._edit"><input type="number" [(ngModel)]="r.eventSum" /></td>
+
+        <td *ngIf="!r._edit" class="desc">{{ r.eventDesc }}</td>
+        <td *ngIf="r._edit">
+          <input [(ngModel)]="r.eventDesc" placeholder="תיאור אירוע" />
+        </td>
+
+        <td class="actions">
+          <button class="btn-edit" *ngIf="!r._edit" (click)="startEdit(r)">✏️</button>
+          <button class="btn-delete" *ngIf="!r._edit" (click)="onDelete(r)">🗑️</button>
+
+          <ng-container *ngIf="r._edit">
+            <button class="btn-save" (click)="saveRow(r)">✔️</button>
+            <button class="btn-cancel" (click)="cancelEdit(r)">❌</button>
+          </ng-container>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pager">
+  <button (click)="firstPage()" [disabled]="page===1">⏮</button>
+  <button (click)="prevPage()" [disabled]="page===1">◀</button>
+  <span>עמוד {{page}} מתוך {{totalPages}} ({{totalCount}} רשומות)</span>
+  <button (click)="nextPage()" [disabled]="page===totalPages">▶</button>
+  <button (click)="lastPage()" [disabled]="page===totalPages">⏭</button>
+
+  <select [(ngModel)]="pageSize" (change)="page=1; loadData()">
+    <option [ngValue]="10">10</option>
+    <option [ngValue]="20">20</option>
+    <option [ngValue]="50">50</option>
+  </select>
+</div>

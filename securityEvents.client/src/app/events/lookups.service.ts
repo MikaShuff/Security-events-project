@@ -5,6 +5,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, shareReplay } from 'rxjs';
 import { LookupItem } from './event.models';
+import { API_BASE } from '../config';
 
 @Injectable({ providedIn: 'root' })
 export class LookupsService {
@@ -14,7 +15,8 @@ export class LookupsService {
 
   private fetchOnce(path: string): Observable<LookupItem[]> {
     if (!this.cache.has(path)) {
-      this.cache.set(path, this.http.get<LookupItem[]>(path).pipe(shareReplay(1)));
+      const url = `${API_BASE}${path}`;
+      this.cache.set(path, this.http.get<LookupItem[]>(url).pipe(shareReplay(1)));
     }
     return this.cache.get(path)!;
   }

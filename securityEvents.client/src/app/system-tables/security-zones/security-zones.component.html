@@ -1,0 +1,53 @@
+<section class="security-zones r-rtl">
+
+	<header class="toolbar">
+		<h1 class="title">טבלת אזורי ביטחון</h1>
+		<div class="toolbar-actions">
+			<button class="btn primary" (click)="onAdd()">הוספה</button>
+		</div>
+	</header>
+
+	<div class="filters">
+		<input type="text" class="input" placeholder="חפש לפי מספר…" [(ngModel)]="filter.id">
+		<input type="text" class="input" placeholder="חפש לפי שם…" [(ngModel)]="filter.name">
+		<button class="btn subtle" (click)="filter = { id: '', name: '' }">ניקוי</button>
+	</div>
+
+	<div class="table-wrapper">
+		<table class="table">
+			<thead>
+				<tr>
+					<th (click)="sortBy('id')" [class.sorted]="sort.key === 'id'">מספר אזור ביטחון</th>
+					<th (click)="sortBy('name')" [class.sorted]="sort.key === 'name'">שם אזור ביטחון</th>
+					<th class="actions-col">פעולות</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr *ngFor="let row of filtered; trackBy: trackById">
+					<td>{{ row.id }}</td>
+
+					<td>
+						<span *ngIf="!row._edit">{{ row.name }}</span>
+						<input *ngIf="row._edit" class="input inline" [(ngModel)]="row.name">
+					</td>
+
+					<td class="actions-col">
+						<div class="actions">
+							<button class="btn icon" *ngIf="!row._edit" (click)="startEdit(row)">✏️</button>
+							<button class="btn icon danger" *ngIf="!row._edit" (click)="onDelete(row)">🗑️</button>
+
+							<button class="btn small success" *ngIf="row._edit" (click)="saveRow(row)">שמירה</button>
+							<button class="btn small subtle" *ngIf="row._edit" (click)="cancelEdit(row)">ביטול</button>
+						</div>
+					</td>
+				</tr>
+
+				<tr *ngIf="!filtered.length">
+					<td colspan="3" class="empty">לא נמצאו נתונים</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</section>

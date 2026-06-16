@@ -1,0 +1,175 @@
+<!-- src/app/events/open-event/open-event.component.html -->
+<div class="page rtl">
+  <form class="card" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <!-- Header row -->
+    <div class="card-head">
+      <div class="title">
+        <div class="h">פתיחת אירוע חדש</div>
+        <div class="meta" *ngIf="eventNumber">מספר אירוע: <b>{{ eventNumber }}</b></div>
+      </div>
+
+      <div class="head-actions">
+        <button type="button" class="btn secondary" (click)="onCancel()" [disabled]="saving">
+          ניקוי
+        </button>
+        <button type="submit" class="btn primary" [disabled]="saving">
+          <span *ngIf="!saving">שמירה</span>
+          <span *ngIf="saving">שומר…</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Body (scroll area) -->
+    <div class="card-body">
+      <!-- Main details (3 columns on wide screens) -->
+      <div class="grid grid-3">
+        <div class="field">
+          <label>תאריך האירוע <span class="req">*</span></label>
+          <input type="datetime-local" formControlName="occurredAt" />
+          <div class="error" *ngIf="(f.occurredAt.touched || submitted) && f.occurredAt.invalid">
+            חובה לבחור תאריך.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>סניף <span class="req">*</span></label>
+          <select formControlName="branchId">
+            <option [ngValue]="null">בחרי…</option>
+            <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+          </select>
+          <div class="error" *ngIf="(f.branchId.touched || submitted) && f.branchId.invalid">
+            חובה לבחור סניף.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>פורמט</label>
+          <select formControlName="formatId">
+            <option *ngFor="let x of formats" [ngValue]="x.id">{{ x.name }}</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>אזור ביטחון</label>
+          <select formControlName="securityAreaId">
+            <option *ngFor="let x of securityAreas" [ngValue]="x.id">{{ x.name }}</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>סוג אירוע <span class="req">*</span></label>
+          <select formControlName="eventTypeId">
+            <option [ngValue]="null">בחרי…</option>
+            <option *ngFor="let t of eventTypes" [ngValue]="t.id">{{ t.name }}</option>
+          </select>
+          <div class="error" *ngIf="(f.eventTypeId.touched || submitted) && f.eventTypeId.invalid">
+            חובה לבחור סוג אירוע.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>תת סוג אירוע <span class="req">*</span></label>
+          <select formControlName="subEventTypeId">
+            <option [ngValue]="null">בחרי…</option>
+            <option *ngFor="let s of subEventTypes" [ngValue]="s.id">{{ s.name }}</option>
+          </select>
+          <div class="error" *ngIf="(f.subEventTypeId.touched || submitted) && f.subEventTypeId.invalid">
+            חובה לבחור תת סוג אירוע.
+          </div>
+          <div class="hint" *ngIf="form.controls.subEventTypeId.disabled">
+            בחרי קודם סוג אירוע כדי לפתוח תתי‑סוגים
+          </div>
+        </div>
+
+        <div class="field">
+          <label>קב״ט <span class="req">*</span></label>
+          <select formControlName="officerId">
+            <option [ngValue]="null">בחרי…</option>
+            <option *ngFor="let o of officers" [ngValue]="o.id">{{ o.name }}</option>
+          </select>
+          <div class="error" *ngIf="(f.officerId.touched || submitted) && f.officerId.invalid">
+            חובה לבחור קב״ט.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>ת״ז לקוח <span class="req">*</span></label>
+          <input
+            type="text"
+            formControlName="customerId"
+            placeholder="5-9 ספרות"
+            inputmode="numeric"
+            autocomplete="off"
+            maxlength="9"
+            minlength="5"
+          />
+          <div class="error" *ngIf="(f.customerId.touched || submitted) && f.customerId.invalid">
+            <div *ngIf="f.customerId.errors?.['required']">חובה להזין ת״ז.</div>
+            <div *ngIf="f.customerId.errors?.['pattern']">ת״ז חייבת להיות 5–9 ספרות.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>סטטוס <span class="req">*</span></label>
+          <select formControlName="statusId">
+            <option [ngValue]="null">בחרי…</option>
+            <option *ngFor="let s of statuses" [ngValue]="s.id">{{ s.name }}</option>
+          </select>
+          <div class="error" *ngIf="(f.statusId.touched || submitted) && f.statusId.invalid">
+            חובה לבחור סטטוס.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>אופן טיפול <span class="req">*</span></label>
+          <select formControlName="handlingId">
+            <option [ngValue]="null">בחרי…</option>
+            <option *ngFor="let h of handlings" [ngValue]="h.id">{{ h.name }}</option>
+          </select>
+          <div class="error" *ngIf="(f.handlingId.touched || submitted) && f.handlingId.invalid">
+            חובה לבחור אופן טיפול.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>סכום בש״ח</label>
+          <input type="number" formControlName="amountNis" min="0" />
+        </div>
+      </div>
+
+      <!-- Text areas (compact) -->
+      <div class="grid grid-2">
+        <div class="field span-2">
+          <label>תיאור <span class="req">*</span></label>
+          <textarea rows="3" formControlName="description"></textarea>
+          <div class="error" *ngIf="(f.description.touched || submitted) && f.description.invalid">
+            <div *ngIf="f.description.errors?.['required']">חובה להזין תיאור.</div>
+            <div *ngIf="f.description.errors?.['minlength']">לפחות 5 תווים.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>תיאור הטיפול</label>
+          <textarea rows="2" formControlName="handlingDescription"></textarea>
+        </div>
+
+        <div class="field">
+          <label>הערות</label>
+          <textarea rows="2" formControlName="remarks"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer actions (sticky) -->
+    <div class="card-foot">
+      <button type="button" class="btn secondary" (click)="onCancel()" [disabled]="saving">
+        ביטול
+      </button>
+
+      <button type="submit" class="btn primary" [disabled]="saving">
+        <span *ngIf="!saving">פתיחה</span>
+        <span *ngIf="saving">פותח…</span>
+      </button>
+    </div>
+  </form>
+</div>

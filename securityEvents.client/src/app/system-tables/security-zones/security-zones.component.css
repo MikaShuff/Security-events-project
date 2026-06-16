@@ -1,0 +1,136 @@
+.r-rtl {
+  direction: rtl;
+}
+
+.security-zones {
+  display: grid;
+  gap: 14px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr; 
+  align-items: center;
+  padding: 6px 0;
+
+  direction: rtl; 
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  direction: rtl;
+  justify-content: flex-start; /* ב‑RTL זה ימין */
+}
+
+.input {
+  padding: 6px 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  min-width: 180px;
+  background: #fff;
+}
+
+  .input.inline {
+    min-width: 240px;
+  }
+
+.table-wrapper {
+  overflow: auto;
+  border: 1px solid #ececec;
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+  .table thead th {
+    position: sticky;
+    top: 0;
+    background: #f7f9fb;
+    padding: 10px 12px;
+    font-weight: 600;
+    border-bottom: 1px solid #e6e6e6;
+    cursor: pointer;
+  }
+
+  .table th.sorted {
+    color: #0078d4;
+  }
+
+  .table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .table tbody tr:nth-child(even) td {
+    background: #fafafa;
+  }
+
+.actions-col {
+  width: 240px;
+  text-align: left;
+}
+
+.actions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.empty {
+  text-align: center;
+  padding: 25px 0;
+  color: #888;
+}
+
+.btn {
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+  .btn.primary {
+    background: #0078d4;
+    color: white;
+    border-color: #0078d4;
+  }
+
+  .btn.subtle {
+    background: #f5f5f5;
+  }
+
+  .btn.icon {
+    padding: 4px 8px;
+    font-size: 16px;
+  }
+
+  .btn.small {
+    padding: 4px 8px;
+  }
+
+  .btn.success {
+    background: #107c10;
+    border-color: #107c10;
+    color: white;
+  }
+
+  .btn.danger {
+    background: #d13438;
+    border-color: #d13438;
+    color: white;
+  }
+
