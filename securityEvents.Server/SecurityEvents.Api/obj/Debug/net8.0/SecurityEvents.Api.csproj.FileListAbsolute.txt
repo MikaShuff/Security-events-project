@@ -134,7 +134,6 @@ C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.csproj.CoreCompileInputs.cache
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\SecurityEvents.Api.sourcelink.json
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\mikah\Desktop\Fullstack Projects\Angular\securityEvents\securityEvents.Server\SecurityEvents.Api\obj\Debug\net8.0\staticwebassets\msbuild.SecurityEvents.Api.Microsoft.AspNetCore.StaticWebAssets.props

@@ -1,0 +1,44 @@
+name: CI Pipeline
+
+on:
+    push:
+    pull_request:
+        branches: ["main"]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest # The job will run on the latest version of Ubuntu available in GitHub Actions.#
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+              # ==== Backend - .Net ====
+            - name: Setup .NET 8
+              uses: actions/setup-dotnet@v4
+              with:
+                dotnet-version: '8.0.x'
+
+
+            - name: Restore .Net dependencies
+              run: dotnet restore ./securityEvents.Server/SecurityEvents.Api/SecurityEvents.Api.sln
+
+            
+            - name: Build .Net backend
+              run: dotnet build ./securityEvents.Server/SecurityEvents.Api/SecurityEvents.Api.sln --configuration Release --no-restore
+
+              # ==== Frontend - Angular ====
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                    node-version: '20'
+            
+            - name: Install Angular dependencies
+              working-directory: ./securityEvents.client
+              run: npm install
+
+            - name: Build Angular frontend
+              working-directory: ./securityEvents.client
+              run: npm run build   
+            - name: Run .NET tests
+              run: dotnet test ./SecurityEvents.Tests
