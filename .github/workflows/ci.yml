@@ -7,7 +7,7 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-latest # The job will run on the latest version of Ubuntu available in GitHub Actions.#
 
         steps:
             - name: Checkout repository
@@ -34,9 +34,9 @@ jobs:
                     node-version: '20'
             
             - name: Install Angular dependencies
-              working-directory: ./securityEvents.Client
+              working-directory: ./securityEvents.client
               run: npm install
 
             - name: Build Angular frontend
-              working-directory: ./securityEvents.Client
+              working-directory: ./securityEvents.client
               run: npm run build 
