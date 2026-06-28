@@ -1,9 +1,0 @@
-{
-  "ExpandedNodes": [
-    "",
-    "\\securityEvents.Server",
-    "\\securityEvents.Server\\SecurityEvents.Api"
-  ],
-  "SelectedNode": "\\securityEvents.Server\\SecurityEvents.Api\\SecurityEvents.Api.csproj",
-  "PreviewInSolutionExplorer": false
-}
